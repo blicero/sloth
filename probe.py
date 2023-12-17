@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2023-12-16 00:28:38 krylon>
+# Time-stamp: <2023-12-17 22:19:52 krylon>
 #
 # /data/code/python/sloth/probe.py
 # created on 14. 12. 2023
@@ -19,6 +19,7 @@ Discover what OS we are running on exactly.
 """
 
 import re
+import subprocess as sp
 from typing import Final, NamedTuple, Optional
 
 import krylib
@@ -33,35 +34,47 @@ class Platform(NamedTuple):
     arch: str
 
 
-os_rel: Final[str] = "/etc/os-release"
-rel_pat: Final[re.Pattern] = \
+OS_REL: Final[str] = "/etc/os-release"
+REL_PAT: Final[re.Pattern] = \
     re.compile("^([^=]+)=(.*)$")
-quot_pat: Final[re.Pattern] = re.compile('^"([^"]+)"$')
+QUOT_PAT: Final[re.Pattern] = re.compile('^"([^"]+)"$')
 
 
-def unquote(s: Final[str]) -> str:
+def unquote(s: str) -> str:
     """Remove leading and trailing quotation marks from a string."""
-    m = quot_pat.find(s)
+    m = QUOT_PAT.search(s)
     if m is None:
         return s
     return m[1]
 
 
-def guess_os() -> Platform:
+def guess_os(osrel: str = OS_REL) -> Platform:
     """Attempt to determine which platform we are running on."""
     # First step, we try /etc/os-release, if it exists.
-    if krylib.fexist(os_rel):
+    if krylib.fexist(osrel):
         info: dict[str, str] = {}
-        with open(os_rel, "r") as fh:
+        with open(osrel, "r", encoding="utf-8") as fh:
             for line in fh:
-                m: Optional[re.Match] = rel_pat.search(line)
+                m: Optional[re.Match] = REL_PAT.search(line)
                 if m is not None:
-                    key: Final[str] = m[1].lower()
-                    val: Final[str] = m[2]
+                    key: str = m[1].lower()
+                    val: str = m[2]
                     info[key] = unquote(val)
         match info["id"]:
             case "debian":
                 return Platform("debian", info["version_id"], "unknown")
+            case "raspbian":
+                return Platform("debian", info["version_id"], "raspberry-pi")
+            case "opensuse-tumbleweed" | "opensuse-leap":
+                return Platform("opensuse", info["version_id"], "unknown")
+            case "freebsd":
+                return Platform("freebsd", info["version_id"], "unknown")
+            case "arch" | "manjaro":
+                return Platform("arch", info["version_id"], "unknown")
+
+    uname: Final[str] = sp.check_output(["/bin/uname", "-smr"]).decode()
+    sysname, version, arch = uname.strip().split()
+    return Platform(sysname.lower(), version, arch)
 
 
 # Local Variables: #
