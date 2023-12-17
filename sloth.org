@@ -1,0 +1,54 @@
+# -*- mode: org; fill-column: 78; -*-
+# Time-stamp: <2023-12-16 22:41:15 krylon>
+#
+#+TAGS: internals(i) ui(u) bug(b) feature(f)
+#+TAGS: database(d) design(e), meditation(m)
+#+TAGS: optimize(o) refactor(r) cleanup(c)
+#+TODO: TODO(t)  RESEARCH(r) IMPLEMENT(i) TEST(e) | DONE(d) FAILED(f) CANCELLED(c)
+#+TODO: MEDITATE(m) PLANNING(p) | SUSPENDED(s)
+#+PRIORITIES: A G D
+
+* Sloth
+  Sloth aims to be a unified frontend to the package managers used on various
+  GNU/Linux distros and other systems (BSD, mainly).
+  In the long run, it would be nice if I could track of what operations were
+  run at what time (a log, duh!), provide options to roll back to a given
+  state, export a list of installed packages (and hopefully config files) and
+  re-apply them on another system, as a way of backing up a system or
+  deploying a given configuration to several machines.
+* Features
+* Platforms
+  Support for platforms depends mainly on my ability to test on these,
+  obviously. 
+** openSUSE
+   I run Tumbleweed on two machines, openSUSE Leap on another, these are a
+   high priority for me, obviously.
+** Debian
+   I run Debian (and Raspberry Pi OS) on several machines, so I want those
+   supported as well.
+** Arch
+   Arch was my initial motivation to start this project, because I find Arch's
+   pacman to be rather complicated and unintuitive to use.
+   I run Arch and Manjaro in a virtual machine each.
+** FreeBSD
+   I run FreeBSD on my home server, including a few jails, so I want these to
+   work, too.
+*** pkg
+*** freebsd-update
+** OpenBSD
+   I run OpenBSD on an old laptop and in a virtual machine.
+*** syspatch / sysupgrade
+*** pkg_add/del/etc
+** pkgsrc
+   Maybe. It's not a priority, though.
+* Components
+** Probe
+   The Probe aims to determine what system we are running on.
+** Database
+   I'm going to use a database for logging what the application did in a
+   machine-readable form.
+** Call package managers
+   I would like to use a simple class hierarchy for this, with an abstract
+   base class to define the interface and a subclass per package manager.
+   Most likely they will just run the host system's package manager in an
+   external process.
