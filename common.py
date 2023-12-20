@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2023-12-14 22:35:14 krylon>
+# Time-stamp: <2023-12-18 16:24:59 krylon>
 #
 # /data/code/python/sloth/common.py
 # created on 14. 12. 2023
@@ -23,7 +23,7 @@ import os
 from threading import Lock
 from typing import Final
 
-APP_NAME: Final[str] = "Vox"
+APP_NAME: Final[str] = "Sloth"
 APP_VERSION: Final[str] = "0.0.1"
 DEBUG: Final[bool] = True
 
