@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2023-12-19 01:06:07 krylon>
+# Time-stamp: <2023-12-20 23:33:11 krylon>
 #
 # /data/code/python/sloth/database.py
 # created on 18. 12. 2023
@@ -22,27 +22,30 @@ import threading
 import time
 from datetime import datetime
 from enum import Enum, auto
-from typing import Final, Optional, Union
+from typing import Any, Final
 
 import krylib
 
-from pkg import Operation
+from sloth import common
+from sloth.pkg import Operation
 
+OPEN_LOCK: Final[threading.Lock] = threading.Lock()
 
 INIT_QUERIES: Final[list[str]] = [
     """
     CREATE TABLE operation (
         id INTEGER PRIMARY KEY,
-        op TEXT NOT NULL,
+        op INTEGER NOT NULL,
         timestamp INTEGER NOT NULL,
         args TEXT NOT NULL DEFAULT ''
-    )
+    ) STRICT
     """,
     "CREATE INDEX idx_op_op ON operation (op)",
     "CREATE INDEX idx_op_time ON operation (timestamp)",
 ]
 
 
+# pylint: disable-msg=C0103
 class QueryID(Enum):
     """Symbolic constants to identify database queries."""
     OpAdd = auto()
@@ -66,6 +69,74 @@ db_queries: Final[dict[QueryID, str]] = {
     LIMIT ?
     """,
 }
+
+
+class Database:
+    """Wrapper around the database connection that provides the
+    operations we need."""
+
+    __slots__ = [
+        "db",
+        "log",
+        "path",
+    ]
+
+    db: sqlite3.Connection
+    log: logging.Logger
+    path: Final[str]
+
+    def __init__(self, path: str) -> None:
+        self.path = path
+        self.log = common.get_logger("database")
+        self.log.debug("Open database at %s", path)
+        with OPEN_LOCK:
+            exist: bool = krylib.fexist(path)
+            self.db = sqlite3.connect(path)  # pylint: disable-msg=C0103
+            self.db.isolation_level = None
+
+            cur: sqlite3.Cursor = self.db.cursor()
+            cur.execute("PRAGMA foreign_keys = true")
+            cur.execute("PRAGMA journal_mode = WAL")
+
+            if not exist:
+                self.__create_db()
+
+    def __create_db(self) -> None:
+        """Initialize a freshly created database"""
+        with self.db:
+            for query in INIT_QUERIES:
+                cur: sqlite3.Cursor = self.db.cursor()
+                cur.execute(query)
+
+    def __enter__(self) -> None:
+        self.db.__enter__()
+
+    def __exit__(self, ex_type, ex_val, traceback):
+        return self.db.__exit__(ex_type, ex_val, traceback)
+
+    def op_add(self, op: Operation, args: str) -> int:
+        """Log an operation performed to the database."""
+        cur: sqlite3.Cursor = self.db.cursor()
+        cur.execute(db_queries[QueryID.OpAdd],
+                    (op.value, int(time.time()), args))
+        row = cur.fetchone()
+        return row[0]
+
+    def op_get_recent(self, limit: int = -1) -> list[Any]:
+        """Fetch the <limit> most recent recorded operations
+        from the database."""
+        cur: sqlite3.Cursor = self.db.cursor()
+        cur.execute(db_queries[QueryID.OpGetRecent], (limit, ))
+        operations = []
+        for row in cur:
+            op = {
+                "id": row[0],
+                "op": Operation(row[1]),
+                "timestamp": datetime.fromtimestamp(row[2]),
+                "args": row[3],
+            }
+            operations.append(op)
+        return operations
 
 
 # Local Variables: #

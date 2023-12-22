@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2023-12-18 20:30:35 krylon>
+# Time-stamp: <2023-12-20 23:16:21 krylon>
 #
 # /data/code/python/sloth/pkg.py
 # created on 18. 12. 2023
@@ -18,11 +18,11 @@ sloth.pkg
 
 from abc import ABC
 from enum import Enum, auto
-from typing import Final
 
 from sloth import probe
 
 
+# pylint: disable-msg=C0103
 class Operation(Enum):
     """Symbolic constants to represent the various operations
     we might perform."""
@@ -36,10 +36,11 @@ class Operation(Enum):
     Autoremove = auto()
 
 
+# pylint: disable-msg=R0903
 class PackageManager(ABC):
     """Base class for the different package managers."""
 
-    platform: Final[probe.Platform]
+    platform: probe.Platform
 
 
 # Local Variables: #
