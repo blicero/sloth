@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2023-12-20 23:33:11 krylon>
+# Time-stamp: <2023-12-23 22:11:37 krylon>
 #
 # /data/code/python/sloth/database.py
 # created on 18. 12. 2023
@@ -22,7 +22,7 @@ import threading
 import time
 from datetime import datetime
 from enum import Enum, auto
-from typing import Any, Final
+from typing import Any, Final, Optional
 
 import krylib
 
@@ -50,6 +50,7 @@ class QueryID(Enum):
     """Symbolic constants to identify database queries."""
     OpAdd = auto()
     OpGetRecent = auto()
+    OpGetMostRecent = auto()
 
 
 db_queries: Final[dict[QueryID, str]] = {
@@ -67,6 +68,16 @@ db_queries: Final[dict[QueryID, str]] = {
     FROM operation
     ORDER BY timestamp DESC
     LIMIT ?
+    """,
+    QueryID.OpGetMostRecent: """
+    SELECT
+        id,
+        timestamp,
+        args
+    FROM operation
+    WHERE op = ?
+    ORDER BY timestamp DESC
+    LIMIT 1
     """,
 }
 
@@ -138,6 +149,19 @@ class Database:
             operations.append(op)
         return operations
 
+    def op_get_most_recent(self, op: Operation) -> Optional[dict]:
+        """Get the most recent instance of the given Operation."""
+        cur: sqlite3.Cursor = self.db.cursor()
+        cur.execute(db_queries[QueryID.OpGetMostRecent], (op, ))
+        row = cur.fetchone()
+        if row is not None:
+            return {
+                "id": row[0],
+                "op": op,
+                "timestamp": datetime.fromtimestamp(row[1]),
+                "args": row[2],
+            }
+        return None
 
 # Local Variables: #
 # python-indent: 4 #

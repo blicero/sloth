@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2023-12-23 00:52:05 krylon>
+# Time-stamp: <2023-12-23 22:17:04 krylon>
 #
 # /data/code/python/sloth/test_database.py
 # created on 20. 12. 2023
@@ -39,6 +39,7 @@ class DatabaseTest(unittest.TestCase):
         root: str = "/tmp"
         if os.path.isdir("/data/ram"):
             root = "/data/ram"
+        global TEST_DIR  # pylint: disable-msg=W0603
         TEST_DIR = os.path.join(
             root,
             datetime.now().strftime("sloth_test_database_%Y%m%d_%H%M%S"))
