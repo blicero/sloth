@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2023-12-20 23:16:21 krylon>
+# Time-stamp: <2023-12-27 15:08:03 krylon>
 #
 # /data/code/python/sloth/pkg.py
 # created on 18. 12. 2023
@@ -16,7 +16,7 @@ sloth.pkg
 (c) 2023 Benjamin Walkenhorst
 """
 
-from abc import ABC
+from abc import ABC, abstractmethod
 from enum import Enum, auto
 
 from sloth import probe
@@ -41,6 +41,18 @@ class PackageManager(ABC):
     """Base class for the different package managers."""
 
     platform: probe.Platform
+
+    @abstractmethod
+    def refresh(self, *args):
+        """Update the local list of packages."""
+        ...
+
+    @abstractmethod
+    def install(self, *args):
+        """Install one or several packages.
+        This may, obviously, cause additional packages to get installed
+        as dependencies."""
+        ...
 
 
 # Local Variables: #
