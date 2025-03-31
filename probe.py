@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2023-12-17 22:19:52 krylon>
+# Time-stamp: <2025-03-31 23:51:54 krylon>
 #
 # /data/code/python/sloth/probe.py
 # created on 14. 12. 2023
 # (c) 2023 Benjamin Walkenhorst
 #
-# This file is part of the Vox audiobook reader. It is distributed under the
+# This file is part of the Sloth Meta Package Manager. It is distributed under the
 # terms of the GNU General Public License 3. See the file LICENSE for details
 # or find a copy online at https://www.gnu.org/licenses/gpl-3.0
 
