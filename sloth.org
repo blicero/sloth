@@ -1,5 +1,5 @@
 # -*- mode: org; fill-column: 78; -*-
-# Time-stamp: <2025-04-01 17:00:18 krylon>
+# Time-stamp: <2025-04-01 18:10:44 krylon>
 #
 #+TAGS: internals(i) ui(u) bug(b) feature(f)
 #+TAGS: database(d) design(e), meditation(m)
@@ -18,14 +18,14 @@
   deploying a given configuration to several machines.
 ** Clocktable
    #+BEGIN: clocktable :scope file :maxlevel 202 :emphasize t
-   #+CAPTION: Clock summary at [2025-04-01 Di 15:44]
+   #+CAPTION: Clock summary at [2025-04-01 Di 17:44]
    | Headline                          | Time   |        |      |      |
    |-----------------------------------+--------+--------+------+------|
-   | *Total time*                      | *0:20* |        |      |      |
+   | *Total time*                      | *0:38* |        |      |      |
    |-----------------------------------+--------+--------+------+------|
-   | *Sloth*                           | *0:20* |        |      |      |
-   | \_  /Components [0/1]/            |        | /0:20/ |      |      |
-   | \_    Call package managers [0/1] |        |        | 0:20 |      |
+   | *Sloth*                           | *0:38* |        |      |      |
+   | \_  /Components [0/1]/            |        | /0:38/ |      |      |
+   | \_    Call package managers [0/1] |        |        | 0:38 |      |
    | \_      To root or not to root    |        |        |      | 0:20 |
    #+END:
 ** Features
@@ -83,6 +83,10 @@
     :PROPERTIES:
     :COOKIE_DATA: todo recursive
     :VISIBILITY: children
+    :END:
+    :LOGBOOK:
+    CLOCK: [2025-04-01 Di 18:10]
+    CLOCK: [2025-04-01 Di 17:26]--[2025-04-01 Di 17:44] =>  0:18
     :END:
     I would like to use a simple class hierarchy for this, with an abstract
     base class to define the interface and a subclass per package manager.
