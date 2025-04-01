@@ -83,8 +83,7 @@ db_queries: Final[dict[QueryID, str]] = {
 
 
 class Database:
-    """Wrapper around the database connection that provides the
-    operations we need."""
+    """Wrapper around the database connection that provides the operations we perform."""
 
     __slots__ = [
         "db",

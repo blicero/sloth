@@ -35,7 +35,7 @@ class DatabaseTest(unittest.TestCase):
     conn: Optional[database.Database] = None
 
     @classmethod
-    def setUpClass(cls) -> None:
+    def setUpClass(cls) -> None:  # noqa: D102
         root: str = "/tmp"
         if os.path.isdir("/data/ram"):
             root = "/data/ram"
@@ -46,7 +46,7 @@ class DatabaseTest(unittest.TestCase):
         common.set_basedir(TEST_DIR)
 
     @classmethod
-    def tearDownClass(cls) -> None:
+    def tearDownClass(cls) -> None:  # noqa: D102
         os.system(f'rm -rf "{TEST_DIR}"')
 
     @classmethod

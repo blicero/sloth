@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-03-31 23:51:54 krylon>
+# Time-stamp: <2025-04-01 18:38:30 krylon>
 #
 # /data/code/python/sloth/probe.py
 # created on 14. 12. 2023

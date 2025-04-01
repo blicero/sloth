@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-03-31 23:51:22 krylon>
+# Time-stamp: <2025-04-01 17:11:47 krylon>
 #
 # /data/code/python/sloth/common.py
 # created on 14. 12. 2023
@@ -38,7 +38,9 @@ class Path:
 
     def base(self, folder: str = "") -> str:
         """Return the base directory for application specific files.
-        If path is a non-empty string, set the base directory to its value."""
+
+        If path is a non-empty string, set the base directory to its value.
+        """
         if folder != "":
             self.__base = folder
         return self.__base
