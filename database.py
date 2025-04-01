@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-01 14:42:52 krylon>
+# Time-stamp: <2025-04-01 19:43:33 krylon>
 #
 # /data/code/python/sloth/database.py
 # created on 18. 12. 2023
@@ -37,17 +37,20 @@ INIT_QUERIES: Final[list[str]] = [
         id INTEGER PRIMARY KEY,
         op INTEGER NOT NULL,
         timestamp INTEGER NOT NULL,
-        args TEXT NOT NULL DEFAULT ''
+        args TEXT NOT NULL DEFAULT '',
+        status INTEGER NOT NULL
     ) STRICT
     """,
     "CREATE INDEX idx_op_op ON operation (op)",
     "CREATE INDEX idx_op_time ON operation (timestamp)",
+    "CREATE INDEX idx_op_status ON operation (status)",
 ]
 
 
 # pylint: disable-msg=C0103
 class QueryID(Enum):
     """Symbolic constants to identify database queries."""
+
     OpAdd = auto()
     OpGetRecent = auto()
     OpGetMostRecent = auto()
@@ -55,8 +58,8 @@ class QueryID(Enum):
 
 db_queries: Final[dict[QueryID, str]] = {
     QueryID.OpAdd: """
-    INSERT INTO operation (op, timestamp, args)
-                   VALUES ( ?,         ?,    ?)
+    INSERT INTO operation (op, timestamp, args, status)
+                   VALUES ( ?,         ?,    ?,      ?)
     RETURNING id
     """,
     QueryID.OpGetRecent: """
@@ -64,7 +67,8 @@ db_queries: Final[dict[QueryID, str]] = {
         id,
         op,
         timestamp,
-        args
+        args,
+        status
     FROM operation
     ORDER BY timestamp DESC
     LIMIT ?
@@ -73,7 +77,8 @@ db_queries: Final[dict[QueryID, str]] = {
     SELECT
         id,
         timestamp,
-        args
+        args,
+        status
     FROM operation
     WHERE op = ?
     ORDER BY timestamp DESC
@@ -124,17 +129,16 @@ class Database:
     def __exit__(self, ex_type, ex_val, traceback):
         return self.db.__exit__(ex_type, ex_val, traceback)
 
-    def op_add(self, op: Operation, args: str) -> int:
+    def op_add(self, op: Operation, args: str, status: int) -> int:
         """Log an operation performed to the database."""
         cur: sqlite3.Cursor = self.db.cursor()
         cur.execute(db_queries[QueryID.OpAdd],
-                    (op.value, int(time.time()), args))
+                    (op.value, int(time.time()), args, status))
         row = cur.fetchone()
         return row[0]
 
     def op_get_recent(self, limit: int = -1) -> list[dict]:
-        """Fetch the <limit> most recent recorded operations
-        from the database."""
+        """Fetch the <limit> most recent recorded operations from the database."""
         cur: sqlite3.Cursor = self.db.cursor()
         cur.execute(db_queries[QueryID.OpGetRecent], (limit, ))
         operations = []
@@ -144,6 +148,7 @@ class Database:
                 "op": Operation(row[1]),
                 "timestamp": datetime.fromtimestamp(row[2]),
                 "args": row[3],
+                "status": row[4]
             }
             operations.append(op)
         return operations
@@ -159,6 +164,7 @@ class Database:
                 "op": op,
                 "timestamp": datetime.fromtimestamp(row[1]),
                 "args": row[2],
+                "status": row[3],
             }
         return None
 

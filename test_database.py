@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-01 15:06:47 krylon>
+# Time-stamp: <2025-04-01 19:43:08 krylon>
 #
 # /data/code/python/sloth/test_database.py
 # created on 20. 12. 2023
@@ -69,10 +69,11 @@ class DatabaseTest(unittest.TestCase):
         db = DatabaseTest.db()
         with db:
             for op in Operation:
-                op_id = db.op_add(op, "a b c")
+                op_id = db.op_add(op, "a b c", 0)
                 self.assertNotEqual(op_id, 0)
 
     def test_03_db_op_get(self) -> None:
+        """Try getting the data we just added."""
         db = DatabaseTest.db()
         with db:
             ops = db.op_get_recent()
