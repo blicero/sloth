@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-03-31 23:51:40 krylon>
+# Time-stamp: <2025-04-01 15:20:17 krylon>
 #
 # /data/code/python/sloth/pkg.py
 # created on 18. 12. 2023
@@ -16,8 +16,10 @@ sloth.pkg
 (c) 2023 Benjamin Walkenhorst
 """
 
+import os
 from abc import ABC, abstractmethod
 from enum import Enum, auto
+from typing import Any
 
 from sloth import probe
 
@@ -42,18 +44,34 @@ class PackageManager(ABC):
 
     platform: probe.Platform
 
+    def __init__(self) -> None:
+        self.platform = probe.guess_os()
+
     @abstractmethod
-    def refresh(self, *args):
+    def refresh(self, *args) -> None:
         """Update the local list of packages."""
         ...
 
     @abstractmethod
-    def install(self, *args):
+    def install(self, *args) -> None:
         """Install one or several packages.
         This may, obviously, cause additional packages to get installed
         as dependencies."""
         ...
 
+    def is_root(self) -> bool:
+        """Return true if we are running with root privileges."""
+        return os.geteuid() == 0
+
+
+class APT(PackageManager):
+    """APT is a frontend for the APT package manager used on Debian and derivatives."""
+
+    def __init__(self) -> None:
+        super().__init__()
+
+    def refresh(self, *args: Any) -> None:
+        pass
 
 # Local Variables: #
 # python-indent: 4 #

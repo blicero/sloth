@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-03-31 23:00:40 krylon>
+# Time-stamp: <2025-04-01 14:42:52 krylon>
 #
 # /data/code/python/sloth/database.py
 # created on 18. 12. 2023
@@ -22,7 +22,7 @@ import threading
 import time
 from datetime import datetime
 from enum import Enum, auto
-from typing import Any, Final, Optional
+from typing import Final, Optional
 
 import krylib
 
@@ -133,7 +133,7 @@ class Database:
         row = cur.fetchone()
         return row[0]
 
-    def op_get_recent(self, limit: int = -1) -> list[Any]:
+    def op_get_recent(self, limit: int = -1) -> list[dict]:
         """Fetch the <limit> most recent recorded operations
         from the database."""
         cur: sqlite3.Cursor = self.db.cursor()

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-03-31 23:52:08 krylon>
+# Time-stamp: <2025-04-01 15:06:47 krylon>
 #
 # /data/code/python/sloth/test_database.py
 # created on 20. 12. 2023
@@ -69,7 +69,16 @@ class DatabaseTest(unittest.TestCase):
         db = DatabaseTest.db()
         with db:
             for op in Operation:
-                db.op_add(op, "a b c")
+                op_id = db.op_add(op, "a b c")
+                self.assertNotEqual(op_id, 0)
+
+    def test_03_db_op_get(self) -> None:
+        db = DatabaseTest.db()
+        with db:
+            ops = db.op_get_recent()
+            self.assertIsNotNone(ops)
+            self.assertIsInstance(ops, list)
+            self.assertEqual(len(ops), len(Operation))
 
 # Local Variables: #
 # python-indent: 4 #
