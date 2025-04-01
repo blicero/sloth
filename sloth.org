@@ -1,5 +1,5 @@
 # -*- mode: org; fill-column: 78; -*-
-# Time-stamp: <2025-04-01 15:44:56 krylon>
+# Time-stamp: <2025-04-01 17:00:18 krylon>
 #
 #+TAGS: internals(i) ui(u) bug(b) feature(f)
 #+TAGS: database(d) design(e), meditation(m)
@@ -99,3 +99,4 @@
      1. os.getuid() for the UID
      2. shutil.which() to check if a command is available
      3. subprocess.run() to execute a command.
+
