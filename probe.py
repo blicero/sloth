@@ -20,15 +20,18 @@ Discover what OS we are running on exactly.
 
 import re
 import subprocess as sp
+from shutil import which
 from typing import Final, NamedTuple, Optional
 
 import krylib
 
 
 class Platform(NamedTuple):
-    """Platform identifies a combination of hardware architecture, operating
-    system, and version.
-    Example: Platform("Debian", "bookworm", "amd64")"""
+    """Platform identifies a combination of hardware architecture, OS, and version.
+
+    Example: Platform("Debian", "bookworm", "amd64")
+    """
+
     name: str
     version: str
     arch: str
@@ -76,6 +79,15 @@ def guess_os(osrel: str = OS_REL) -> Platform:
     sysname, version, arch = uname.strip().split()
     return Platform(sysname.lower(), version, arch)
 
+
+def find_sudo() -> Optional[str]:
+    """Find the command to run commands with elevated privileges."""
+    commands: Final[list[str]] = ["sudo", "doas", "run0"]
+    for c in commands:
+        full_path: Optional[str] = which(c)
+        if full_path is not None:
+            return full_path
+    return None
 
 # Local Variables: #
 # python-indent: 4 #
