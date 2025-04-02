@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-01 19:57:52 krylon>
+# Time-stamp: <2025-04-02 10:53:35 krylon>
 #
 # /data/code/python/sloth/pkg.py
 # created on 18. 12. 2023
@@ -60,6 +60,18 @@ class PackageManager(ABC):
             else:
                 self.log.warning("We are not running as root, and neither sudo nor doas was found.")
 
+    @classmethod
+    def create(cls) -> 'PackageManager':
+        """Return the appropriate PackageManager for the current system"""
+        system = probe.guess_os()
+        match system[0].lower():
+            case "debian" | "ubuntu":
+                return APT()
+            case "opensuse-tumbleweed" | "opensuse-leap" | "opensuse":
+                return Zypper()
+            case _:
+                raise RuntimeError(f"Unsupported platform: {system[0]}")
+
     @abstractmethod
     def pkg_cmd(self) -> list[str]:
         """Return the command to execute the package manager."""
@@ -69,7 +81,7 @@ class PackageManager(ABC):
         """Update the local list of packages."""
 
     @abstractmethod
-    def install(self, **kwargs) -> None:
+    def install(self, *args, **kwargs) -> None:
         """Install one or several packages.
 
         This may, obviously, cause additional packages to get installed
@@ -125,6 +137,12 @@ class APT(PackageManager):
         cmd.append("full-upgrade")
         self._run(cmd)
 
+    def install(self, *args, **kwargs) -> None:
+        """Install one or more packages."""
+        self.log.debug("Install %s",
+                       ", ".join(args))
+        raise NotImplementedError("Installing packages is not implemented, yet.")
+
 
 class Zypper(PackageManager):
     """Zypper is the package manager used by openSUSE."""
@@ -144,6 +162,18 @@ class Zypper(PackageManager):
             cmd.append("-f")
 
         self._run(cmd)
+
+    def upgrade(self, **kwargs) -> None:
+        """Install any pending updates."""
+        cmd = self.pkg_cmd()
+        cmd.append("up")
+        self._run(cmd)
+
+    def install(self, *args, **kwargs) -> None:
+        """Install one or more packages."""
+        self.log.debug("Install %s",
+                       ", ".join(args))
+        raise NotImplementedError("Installing packages is not implemented, yet.")
 
 # Local Variables: #
 # python-indent: 4 #
