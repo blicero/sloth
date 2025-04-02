@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-01 19:43:33 krylon>
+# Time-stamp: <2025-04-02 10:15:32 krylon>
 #
 # /data/code/python/sloth/database.py
 # created on 18. 12. 2023
@@ -100,7 +100,9 @@ class Database:
     log: logging.Logger
     path: Final[str]
 
-    def __init__(self, path: str) -> None:
+    def __init__(self, path: str = "") -> None:
+        if path == "":
+            path = common.path.db()
         self.path = path
         self.log = common.get_logger("database")
         self.log.debug("Open database at %s", path)
