@@ -21,9 +21,11 @@ import os
 import subprocess
 from abc import ABC, abstractmethod
 from enum import Enum, auto
-from typing import Optional
+from typing import Final, Optional
 
 from sloth import common, probe
+
+BLANK: Final[str] = " "
 
 
 # pylint: disable-msg=C0103
