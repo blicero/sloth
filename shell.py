@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-02 10:56:17 krylon>
+# Time-stamp: <2025-04-02 18:12:09 krylon>
 #
 # /data/code/python/sloth/shell.py
 # created on 01. 04. 2025
@@ -19,6 +19,7 @@ sloth.shell
 import atexit
 import logging
 import readline
+import shlex
 from cmd import Cmd
 
 from sloth import common, database, pkg
@@ -59,6 +60,7 @@ class Shell(Cmd):
     def do_search(self, arg: str) -> bool:
         """Search for packages."""
         self.log.debug("Search for %s", arg)
+        self.pk.search(*shlex.split(arg))
         return False
 
     def do_EOF(self, _) -> bool:

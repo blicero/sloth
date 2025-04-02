@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-02 10:53:35 krylon>
+# Time-stamp: <2025-04-02 18:19:43 krylon>
 #
 # /data/code/python/sloth/pkg.py
 # created on 18. 12. 2023
@@ -101,11 +101,15 @@ class PackageManager(ABC):
     def upgrade(self, **kwargs) -> None:
         """Install any pending updates."""
 
+    @abstractmethod
+    def search(self, *arg, **kwargs) -> None:
+        """Search for available packages."""
+
     def is_root(self) -> bool:
         """Return true if we are running with root privileges."""
         return os.geteuid() == 0
 
-    def _run(self, cmd: list[str]) -> bool:
+    def _run(self, cmd: list[str], capture: bool = False) -> bool:
         """Execute the given command."""
         cmd = self.pkg_cmd() + cmd
 
@@ -113,15 +117,19 @@ class PackageManager(ABC):
                        " ".join(cmd))
 
         proc = subprocess.run(cmd,
-                              capture_output=True,
+                              capture_output=capture,
                               text=True,
                               check=False,
                               encoding="utf-8")
+
+        if capture:
+            self.output = (proc.stdout, proc.stderr)
 
         if proc.returncode != 0:
             self.log.error("Error running package refresh:\n%s",
                            proc.stderr)
             return False
+
         return True
 
 
@@ -152,6 +160,14 @@ class APT(PackageManager):
                        ", ".join(args))
         raise NotImplementedError("Installing packages is not implemented, yet.")
 
+    def search(self, *args, **kwargs) -> None:
+        """Search for available packages."""
+        self.log.debug("Search %s", BLANK.join(args))
+        cmd = self.pkg_cmd()
+        cmd.append("search")
+        cmd.extend(args)
+        self._run(cmd)
+
 
 class Zypper(PackageManager):
     """Zypper is the package manager used by openSUSE."""
@@ -174,7 +190,7 @@ class Zypper(PackageManager):
 
     def upgrade(self, **kwargs) -> None:
         """Install any pending updates."""
-        cmd = self.pkg_cmd()
+        cmd: list[str] = []
         cmd.append("up")
         self._run(cmd)
 
@@ -183,6 +199,14 @@ class Zypper(PackageManager):
         self.log.debug("Install %s",
                        ", ".join(args))
         raise NotImplementedError("Installing packages is not implemented, yet.")
+
+    def search(self, *args, **kwargs) -> None:
+        """Search the package database."""
+        self.log.debug("Search %s", BLANK.join(args))
+        cmd: list[str] = []
+        cmd.append("se")
+        cmd.extend(args)
+        self._run(cmd)
 
 # Local Variables: #
 # python-indent: 4 #
