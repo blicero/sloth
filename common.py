@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-01 17:11:47 krylon>
+# Time-stamp: <2025-04-02 09:38:50 krylon>
 #
 # /data/code/python/sloth/common.py
 # created on 14. 12. 2023
@@ -56,6 +56,10 @@ class Path:
     def log(self) -> str:
         """Return the path to the log file"""
         return os.path.join(self.__base, f"{APP_NAME.lower()}.log")
+
+    def histfile(self) -> str:
+        """Return the path of the shell history file"""
+        return os.path.join(self.__base, "shell.history")
 
 
 path: Path = Path(os.path.expanduser(f"~/.{APP_NAME.lower()}.d"))
