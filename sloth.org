@@ -1,5 +1,5 @@
 # -*- mode: org; fill-column: 78; -*-
-# Time-stamp: <2025-04-01 18:10:44 krylon>
+# Time-stamp: <2025-04-02 10:58:49 krylon>
 #
 #+TAGS: internals(i) ui(u) bug(b) feature(f)
 #+TAGS: database(d) design(e), meditation(m)
@@ -18,14 +18,14 @@
   deploying a given configuration to several machines.
 ** Clocktable
    #+BEGIN: clocktable :scope file :maxlevel 202 :emphasize t
-   #+CAPTION: Clock summary at [2025-04-01 Di 17:44]
+   #+CAPTION: Clock summary at [2025-04-02 Mi 10:58]
    | Headline                          | Time   |        |      |      |
    |-----------------------------------+--------+--------+------+------|
-   | *Total time*                      | *0:38* |        |      |      |
+   | *Total time*                      | *4:25* |        |      |      |
    |-----------------------------------+--------+--------+------+------|
-   | *Sloth*                           | *0:38* |        |      |      |
-   | \_  /Components [0/1]/            |        | /0:38/ |      |      |
-   | \_    Call package managers [0/1] |        |        | 0:38 |      |
+   | *Sloth*                           | *4:25* |        |      |      |
+   | \_  /Components [0/1]/            |        | /4:25/ |      |      |
+   | \_    Call package managers [0/1] |        |        | 4:25 |      |
    | \_      To root or not to root    |        |        |      | 0:20 |
    #+END:
 ** Features
@@ -85,7 +85,8 @@
     :VISIBILITY: children
     :END:
     :LOGBOOK:
-    CLOCK: [2025-04-01 Di 18:10]
+    CLOCK: [2025-04-02 Mi 09:33]--[2025-04-02 Mi 10:58] =>  1:25
+    CLOCK: [2025-04-01 Di 18:10]--[2025-04-01 Di 20:32] =>  2:22
     CLOCK: [2025-04-01 Di 17:26]--[2025-04-01 Di 17:44] =>  0:18
     :END:
     I would like to use a simple class hierarchy for this, with an abstract
