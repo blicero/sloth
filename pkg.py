@@ -40,13 +40,20 @@ class Operation(Enum):
     Autoremove = auto()
 
 
-# pylint: disable-msg=R0903
 class PackageManager(ABC):
     """Base class for the different package managers."""
+
+    __slots__ = [
+        "platform",
+        "log",
+        "sudo",
+        "output",
+    ]
 
     platform: probe.Platform
     log: logging.Logger
     sudo: Optional[str]
+    output: tuple[str, str]
 
     def __init__(self) -> None:
         self.platform = probe.guess_os()
