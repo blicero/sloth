@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-02 18:12:09 krylon>
+# Time-stamp: <2025-04-03 13:40:07 krylon>
 #
 # /data/code/python/sloth/shell.py
 # created on 01. 04. 2025
@@ -61,6 +61,12 @@ class Shell(Cmd):
         """Search for packages."""
         self.log.debug("Search for %s", arg)
         self.pk.search(*shlex.split(arg))
+        return False
+
+    def do_upgrade(self, _arg: str) -> bool:
+        """Install pending updates."""
+        self.log.debug("Update existing packages.")
+        self.pk.upgrade()
         return False
 
     def do_EOF(self, _) -> bool:
