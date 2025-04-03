@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-02 18:19:43 krylon>
+# Time-stamp: <2025-04-03 13:50:34 krylon>
 #
 # /data/code/python/sloth/pkg.py
 # created on 18. 12. 2023
@@ -144,14 +144,12 @@ class APT(PackageManager):
 
     def refresh(self, **kwargs) -> None:
         """Update the local list of packages."""
-        cmd = self.pkg_cmd()
-        cmd.append("update")
+        cmd = ["update"]
         self._run(cmd)
 
     def upgrade(self, **kwargs) -> None:
         """Install any pending updates."""
-        cmd = self.pkg_cmd()
-        cmd.append("full-upgrade")
+        cmd = ["full-upgrade"]
         self._run(cmd)
 
     def install(self, *args, **kwargs) -> None:
@@ -163,7 +161,7 @@ class APT(PackageManager):
     def search(self, *args, **kwargs) -> None:
         """Search for available packages."""
         self.log.debug("Search %s", BLANK.join(args))
-        cmd = self.pkg_cmd()
+        cmd: list[str] = []
         cmd.append("search")
         cmd.extend(args)
         self._run(cmd)
@@ -180,8 +178,7 @@ class Zypper(PackageManager):
 
     def refresh(self, **kwargs) -> None:
         """Update the local list of packages."""
-        cmd = self.pkg_cmd()
-        cmd.append("ref")
+        cmd = ["ref"]
 
         if "force" in kwargs and kwargs["force"]:
             cmd.append("-f")
@@ -190,8 +187,7 @@ class Zypper(PackageManager):
 
     def upgrade(self, **kwargs) -> None:
         """Install any pending updates."""
-        cmd: list[str] = []
-        cmd.append("up")
+        cmd: list[str] = ["dup"] if self.platform.name == "opensuse-tumbleweed" else ["up"]
         self._run(cmd)
 
     def install(self, *args, **kwargs) -> None:
