@@ -1,5 +1,5 @@
 # -*- mode: org; fill-column: 78; -*-
-# Time-stamp: <2025-04-04 23:37:54 krylon>
+# Time-stamp: <2025-04-05 01:22:36 krylon>
 #
 #+TAGS: internals(i) ui(u) bug(b) feature(f)
 #+TAGS: database(d) design(e), meditation(m)
@@ -22,15 +22,15 @@
   deploying a given configuration to several machines.
 ** Clocktable
    #+BEGIN: clocktable :scope file :maxlevel 202 :emphasize t
-   #+CAPTION: Clock summary at [2025-04-04 Fr 23:37]
+   #+CAPTION: Clock summary at [2025-04-05 Sa 01:22]
    | Headline                               | Time    |         |       |      |
    |----------------------------------------+---------+---------+-------+------|
-   | *Total time*                           | *15:04* |         |       |      |
+   | *Total time*                           | *15:45* |         |       |      |
    |----------------------------------------+---------+---------+-------+------|
-   | *Sloth [0/7]*                          | *15:04* |         |       |      |
-   | \_  /Components [0/1]/                 |         | /15:04/ |       |      |
-   | \_    Call package managers [0/1]      |         |         | 15:04 |      |
-   | \_      Parsing output or interfacing? |         |         |       | 6:48 |
+   | *Sloth [0/7]*                          | *15:45* |         |       |      |
+   | \_  /Components [0/1]/                 |         | /15:45/ |       |      |
+   | \_    Call package managers [0/1]      |         |         | 15:45 |      |
+   | \_      Parsing output or interfacing? |         |         |       | 7:29 |
    | \_      To root or not to root         |         |         |       | 0:20 |
    #+END:
 ** Features
@@ -103,6 +103,7 @@
     external process.
 **** Parsing output or interfacing?
      :LOGBOOK:
+     CLOCK: [2025-04-04 Fr 23:40]--[2025-04-05 Sa 00:21] =>  0:41
      CLOCK: [2025-04-04 Fr 17:55]--[2025-04-04 Fr 23:37] =>  5:42
      CLOCK: [2025-04-04 Fr 17:26]--[2025-04-04 Fr 17:34] =>  0:08
      CLOCK: [2025-04-04 Fr 16:36]--[2025-04-04 Fr 17:25] =>  0:49
