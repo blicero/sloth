@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-04 17:24:22 krylon>
+# Time-stamp: <2025-04-04 17:33:30 krylon>
 #
 # /data/code/python/sloth/pkg.py
 # created on 18. 12. 2023
@@ -74,6 +74,7 @@ class PackageManager(ABC):
         self.platform = probe.guess_os()
         self.log = common.get_logger("PackageManager")
         self.log.debug("Running on %s", self.platform.name)
+        self.output = ('', '')
         if not self.is_root():
             self.sudo = probe.find_sudo()
             if self.sudo is not None:
@@ -186,7 +187,7 @@ class APT(PackageManager):
         cmd: list[str] = []
         cmd.append("search")
         cmd.extend(args)
-        self._run(cmd)
+        self._run(cmd, True)
         m = aptPat.findall(self.output[0])
         results: list[Package] = []
         if len(m) == 0:
@@ -194,10 +195,11 @@ class APT(PackageManager):
                            self.output[0])
         else:
             for group in m:
-                p: Package = Package(name=group[1],
-                                     desc=group[2].strip(),
-                                     kind=group[3],
-                                     info=group[0].strip())
+                p: Package = Package(name=group[0],
+                                     desc=group[4],
+                                     kind=group[1],
+                                     info=group[3],
+                                     version=group[2],)
                 results.append(p)
         return results
 
