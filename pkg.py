@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-04 19:46:56 krylon>
+# Time-stamp: <2025-04-04 23:46:02 krylon>
 #
 # /data/code/python/sloth/pkg.py
 # created on 18. 12. 2023
@@ -196,10 +196,22 @@ class APT(PackageManager):
                            self.output[1])
         else:
             for group in m:
+                info: str = ""
+                match group[3].lower():
+                    case "installiert":
+                        info = "i"
+                    case "installiert,automatisch":
+                        info = "i+"
+                    case "":
+                        pass
+                    case _:
+                        self.log.debug("Unexpected info field for %s: '%s'",
+                                       group[0],
+                                       group[3])
                 p: Package = Package(name=group[0],
                                      desc=group[4],
                                      kind=group[1],
-                                     info=group[3],
+                                     info=info,
                                      version=group[2],)
                 results.append(p)
         return results
