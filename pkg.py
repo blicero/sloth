@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-03 13:50:34 krylon>
+# Time-stamp: <2025-04-04 17:24:22 krylon>
 #
 # /data/code/python/sloth/pkg.py
 # created on 18. 12. 2023
@@ -18,8 +18,10 @@ sloth.pkg
 
 import logging
 import os
+import re
 import subprocess
 from abc import ABC, abstractmethod
+from dataclasses import dataclass
 from enum import Enum, auto
 from typing import Final, Optional
 
@@ -40,6 +42,17 @@ class Operation(Enum):
     UpgradeRelease = auto()
     Cleanup = auto()
     Autoremove = auto()
+
+
+@dataclass(slots=True, kw_only=True)
+class Package:
+    """Package (usually) is a piece of software or documentation that can be installed on a system."""
+
+    name: str
+    desc: str
+    kind: Optional[str] = None
+    version: Optional[str] = None
+    info: Optional[str] = None
 
 
 class PackageManager(ABC):
@@ -102,7 +115,7 @@ class PackageManager(ABC):
         """Install any pending updates."""
 
     @abstractmethod
-    def search(self, *arg, **kwargs) -> None:
+    def search(self, *arg, **kwargs) -> list[str]:
         """Search for available packages."""
 
     def is_root(self) -> bool:
@@ -133,6 +146,15 @@ class PackageManager(ABC):
         return True
 
 
+aptPat: Final[re.Pattern] = re.compile(r"""
+^ ([^/\n]+) / (\S+) \s+         # Newline, package name, slash, branch
+(\S+) \s+ \w+ \s*               # Version, arch
+(?:\[ ( [^]]+ ) \] | ) $        # Installed, and if so, as a dependency?
+\s+ ([^\n]+) $                  # Description
+""",
+                                       re.X | re.M | re.S)
+
+
 class APT(PackageManager):
     """APT is a frontend for the APT package manager used on Debian and derivatives."""
 
@@ -158,13 +180,29 @@ class APT(PackageManager):
                        ", ".join(args))
         raise NotImplementedError("Installing packages is not implemented, yet.")
 
-    def search(self, *args, **kwargs) -> None:
+    def search(self, *args, **kwargs) -> list[str]:
         """Search for available packages."""
         self.log.debug("Search %s", BLANK.join(args))
         cmd: list[str] = []
         cmd.append("search")
         cmd.extend(args)
         self._run(cmd)
+        m = aptPat.findall(self.output[0])
+        results: list[Package] = []
+        if len(m) == 0:
+            self.log.error("Cannot parse output of zypper:\n%s",
+                           self.output[0])
+        else:
+            for group in m:
+                p: Package = Package(name=group[1],
+                                     desc=group[2].strip(),
+                                     kind=group[3],
+                                     info=group[0].strip())
+                results.append(p)
+        return results
+
+
+zyppPat: Final[re.Pattern] = re.compile(r"^ ([^|]+) \| \s+ (\S+) \s+ \| \s+ ([^|]+) \s+ \| \s+ (\S+) \s* $", re.X | re.M)
 
 
 class Zypper(PackageManager):
@@ -196,13 +234,32 @@ class Zypper(PackageManager):
                        ", ".join(args))
         raise NotImplementedError("Installing packages is not implemented, yet.")
 
-    def search(self, *args, **kwargs) -> None:
+    def search(self, *args, **kwargs) -> list[str]:
         """Search the package database."""
         self.log.debug("Search %s", BLANK.join(args))
         cmd: list[str] = []
         cmd.append("se")
         cmd.extend(args)
-        self._run(cmd)
+        if not self._run(cmd, True):
+            self.log.error("Search for '%s' failed:\n%s",
+                           BLANK.join(args),
+                           self.output[1])
+            return []
+
+        m = zyppPat.findall(self.output[0])
+        results: list[Package] = []
+        if len(m) == 0:
+            self.log.error("Cannot parse output of zypper:\n%s",
+                           self.output[0])
+        else:
+            # First match contains the column headers, so we skip those
+            for group in m[1:]:
+                p: Package = Package(name=group[1],
+                                     desc=group[2].strip(),
+                                     kind=group[3],
+                                     info=group[0].strip())
+                results.append(p)
+        return results
 
 # Local Variables: #
 # python-indent: 4 #

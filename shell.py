@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-03 13:40:07 krylon>
+# Time-stamp: <2025-04-04 16:35:25 krylon>
 #
 # /data/code/python/sloth/shell.py
 # created on 01. 04. 2025
@@ -21,6 +21,7 @@ import logging
 import readline
 import shlex
 from cmd import Cmd
+from datetime import datetime
 
 from sloth import common, database, pkg
 
@@ -32,11 +33,13 @@ class Shell(Cmd):
         "db",
         "log",
         "pk",
+        "timestamp",
     ]
 
     db: database.Database
     log: logging.Logger
     pk: pkg.PackageManager
+    timestamp: datetime
 
     def __init__(self) -> None:
         super().__init__()
@@ -52,6 +55,18 @@ class Shell(Cmd):
         finally:
             atexit.register(readline.write_history_file, common.path.histfile())
 
+    def precmd(self, line) -> str:
+        """Save the time before executing the command."""
+        self.timestamp = datetime.now()
+        return line
+
+    def postcmd(self, stop, line) -> bool:
+        """After running the command, display how much time it took."""
+        after = datetime.now()
+        delta = after - self.timestamp
+        print(f"Command started at {self.timestamp:%Y-%m-%d %H:%M:%S} and took {delta} to execute")
+        return stop
+
     def do_refresh(self, _arg: str) -> bool:
         """Refresh the package database."""
         self.pk.refresh()
@@ -60,7 +75,10 @@ class Shell(Cmd):
     def do_search(self, arg: str) -> bool:
         """Search for packages."""
         self.log.debug("Search for %s", arg)
-        self.pk.search(*shlex.split(arg))
+        packages = self.pk.search(*shlex.split(arg))
+        for p in packages:
+            print(f"{p.name} - {p.desc}")
+        print("")
         return False
 
     def do_upgrade(self, _arg: str) -> bool:
