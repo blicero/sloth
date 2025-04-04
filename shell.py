@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-04 16:35:25 krylon>
+# Time-stamp: <2025-04-04 17:54:19 krylon>
 #
 # /data/code/python/sloth/shell.py
 # created on 01. 04. 2025
@@ -77,7 +77,7 @@ class Shell(Cmd):
         self.log.debug("Search for %s", arg)
         packages = self.pk.search(*shlex.split(arg))
         for p in packages:
-            print(f"{p.name} - {p.desc}")
+            print(f"{p.info:8} {p.name} - {p.desc}")
         print("")
         return False
 

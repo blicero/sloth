@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-03 13:30:58 krylon>
+# Time-stamp: <2025-04-04 17:44:55 krylon>
 #
 # /data/code/python/sloth/probe.py
 # created on 14. 12. 2023
@@ -82,7 +82,9 @@ def guess_os(osrel: str = OS_REL) -> Platform:
 
 def find_sudo() -> Optional[str]:
     """Find the command to run commands with elevated privileges."""
-    commands: Final[list[str]] = ["sudo", "doas", "run0"]
+    # We prefer doas over sudo, because the latter sometimes is very
+    # persistent about wanting a password, and I'm kinda lazy.
+    commands: Final[list[str]] = ["doas", "sudo", "run0"]
     for c in commands:
         full_path: Optional[str] = which(c)
         if full_path is not None:

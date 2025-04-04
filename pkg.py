@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-04 17:33:30 krylon>
+# Time-stamp: <2025-04-04 19:46:56 krylon>
 #
 # /data/code/python/sloth/pkg.py
 # created on 18. 12. 2023
@@ -116,7 +116,7 @@ class PackageManager(ABC):
         """Install any pending updates."""
 
     @abstractmethod
-    def search(self, *arg, **kwargs) -> list[str]:
+    def search(self, *arg, **kwargs) -> list[Package]:
         """Search for available packages."""
 
     def is_root(self) -> bool:
@@ -181,7 +181,7 @@ class APT(PackageManager):
                        ", ".join(args))
         raise NotImplementedError("Installing packages is not implemented, yet.")
 
-    def search(self, *args, **kwargs) -> list[str]:
+    def search(self, *args, **kwargs) -> list[Package]:
         """Search for available packages."""
         self.log.debug("Search %s", BLANK.join(args))
         cmd: list[str] = []
@@ -191,8 +191,9 @@ class APT(PackageManager):
         m = aptPat.findall(self.output[0])
         results: list[Package] = []
         if len(m) == 0:
-            self.log.error("Cannot parse output of zypper:\n%s",
-                           self.output[0])
+            self.log.error("Cannot parse output of APT:\n%s\n%s",
+                           self.output[0],
+                           self.output[1])
         else:
             for group in m:
                 p: Package = Package(name=group[0],
@@ -236,7 +237,7 @@ class Zypper(PackageManager):
                        ", ".join(args))
         raise NotImplementedError("Installing packages is not implemented, yet.")
 
-    def search(self, *args, **kwargs) -> list[str]:
+    def search(self, *args, **kwargs) -> list[Package]:
         """Search the package database."""
         self.log.debug("Search %s", BLANK.join(args))
         cmd: list[str] = []
