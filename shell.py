@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-04 17:54:19 krylon>
+# Time-stamp: <2025-04-05 14:39:36 krylon>
 #
 # /data/code/python/sloth/shell.py
 # created on 01. 04. 2025
@@ -22,6 +22,8 @@ import readline
 import shlex
 from cmd import Cmd
 from datetime import datetime
+
+from prompt_toolkit.shortcuts import checkboxlist_dialog
 
 from sloth import common, database, pkg
 
@@ -76,9 +78,15 @@ class Shell(Cmd):
         """Search for packages."""
         self.log.debug("Search for %s", arg)
         packages = self.pk.search(*shlex.split(arg))
-        for p in packages:
-            print(f"{p.info:8} {p.name} - {p.desc}")
-        print("")
+        if len(packages) > 0:
+            dlg = checkboxlist_dialog(
+                title="Results",
+                text=f"Search results for '{arg}'",
+                values=[(x.name, f"{x.name} - {x.desc}") for x in packages],
+            )
+
+            results = dlg.run()
+            print(results)
         return False
 
     def do_upgrade(self, _arg: str) -> bool:
