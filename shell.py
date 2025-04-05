@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-05 14:39:36 krylon>
+# Time-stamp: <2025-04-05 15:19:57 krylon>
 #
 # /data/code/python/sloth/shell.py
 # created on 01. 04. 2025
@@ -23,9 +23,11 @@ import shlex
 from cmd import Cmd
 from datetime import datetime
 
+from prompt_toolkit import HTML
 from prompt_toolkit.shortcuts import checkboxlist_dialog
 
 from sloth import common, database, pkg
+from sloth.pkg import Package
 
 
 class Shell(Cmd):
@@ -82,11 +84,13 @@ class Shell(Cmd):
             dlg = checkboxlist_dialog(
                 title="Results",
                 text=f"Search results for '{arg}'",
-                values=[(x.name, f"{x.name} - {x.desc}") for x in packages],
+                values=[(x, pkg_fancy(x)) for x in packages],
+                default_values=[x for x in packages if x.info],
             )
 
             results = dlg.run()
-            print(results)
+            if results:
+                print(results)
         return False
 
     def do_upgrade(self, _arg: str) -> bool:
@@ -100,6 +104,15 @@ class Shell(Cmd):
         print("")
         self.log.info("Bye bye")
         return True
+
+
+def pkg_fancy(p: Package) -> HTML:
+    """Return a nicely formatted version of the package's name and description"""
+    name: str = p.name
+    if p.version:
+        name += f"-{p.version}"
+    s = f"<b>{name}</b> - <u>{p.desc}</u>"
+    return HTML(s)
 
 
 if __name__ == '__main__':
