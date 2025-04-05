@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-05 15:22:09 krylon>
+# Time-stamp: <2025-04-05 16:37:29 krylon>
 #
 # /data/code/python/sloth/pkg.py
 # created on 18. 12. 2023
@@ -274,6 +274,70 @@ class Zypper(PackageManager):
                                      kind=group[3],
                                      info=group[0].strip())
                 results.append(p)
+        return results
+
+
+pacPat: Final[re.Pattern] = re.compile(r"""
+^([^/]+) / (\S+) \s+   # repo, package name
+(.*)                   # version
+(?: \s+ \[(\w+)\])?    # installed?
+\n\s+ (.*)             # description
+""",
+                                       re.X | re.M)
+
+
+class Pacman(PackageManager):
+    """Pacman is a frontend to Arch Linux' pacman"""
+
+    def pkg_cmd(self) -> list[str]:
+        """Return the command to execute the package manager."""
+        if self.sudo:
+            return [self.sudo, "pacman"]
+        return ["pacman"]
+
+    def refresh(self, **kwargs) -> None:
+        """Update the local package database"""
+        cmd = ["-Sy"]
+        self._run(cmd)
+
+    def upgrade(self, **kwargs) -> None:
+        """Install pending updates"""
+        cmd = ["-Syu"]
+        self._run(cmd)
+
+    def install(self, *args, **kwargs) -> None:
+        """Install packages"""
+        cmd = ["-S"] + args
+        self._run(cmd)
+
+    def search(self, *args, **kwargs) -> list[Package]:
+        """Search for available packages"""
+        self.log.debug("Search %s", BLANK.join(args))
+        cmd: list[str] = ["-Ss"]
+        cmd.extend(args)
+        self._run(cmd, True)
+        m = pacPat.findall(self.output[0])
+        if not m:
+            self.log.debug("No results were found for '%s'", BLANK.join(args))
+            return []
+
+        results: list[Package] = []
+
+        for group in m:
+            if len(group) == 5:
+                p = Package(name=group[1],
+                            desc=group[4],
+                            version=group[2],
+                            kind=group[0],
+                            info=group[3])
+                results += p
+            else:
+                p = Package(name=group[1],
+                            desc=group[3],
+                            version=group[2],
+                            kind=group[0])
+                results += p
+
         return results
 
 # Local Variables: #
