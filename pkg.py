@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-05 16:37:29 krylon>
+# Time-stamp: <2025-04-05 16:58:35 krylon>
 #
 # /data/code/python/sloth/pkg.py
 # created on 18. 12. 2023
@@ -92,6 +92,8 @@ class PackageManager(ABC):
                 return APT()
             case "opensuse-tumbleweed" | "opensuse-leap" | "opensuse":
                 return Zypper()
+            case "arch":
+                return Pacman()
             case _:
                 raise RuntimeError(f"Unsupported platform: {system[0]}")
 
@@ -279,7 +281,7 @@ class Zypper(PackageManager):
 
 pacPat: Final[re.Pattern] = re.compile(r"""
 ^([^/]+) / (\S+) \s+   # repo, package name
-(.*)                   # version
+(.*?)                  # version
 (?: \s+ \[(\w+)\])?    # installed?
 \n\s+ (.*)             # description
 """,
@@ -330,13 +332,13 @@ class Pacman(PackageManager):
                             version=group[2],
                             kind=group[0],
                             info=group[3])
-                results += p
+                results.append(p)
             else:
                 p = Package(name=group[1],
                             desc=group[3],
                             version=group[2],
                             kind=group[0])
-                results += p
+                results.append(p)
 
         return results
 

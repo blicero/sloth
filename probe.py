@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-04 17:44:55 krylon>
+# Time-stamp: <2025-04-05 16:47:54 krylon>
 #
 # /data/code/python/sloth/probe.py
 # created on 14. 12. 2023
@@ -73,7 +73,7 @@ def guess_os(osrel: str = OS_REL) -> Platform:
             case "freebsd":
                 return Platform("freebsd", info["version_id"], "unknown")
             case "arch" | "manjaro":
-                return Platform("arch", info["version_id"], "unknown")
+                return Platform("arch", "n/a", "unknown")
 
     uname: Final[str] = sp.check_output(["/bin/uname", "-smr"]).decode()
     sysname, version, arch = uname.strip().split()
