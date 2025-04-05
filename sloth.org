@@ -1,5 +1,5 @@
 # -*- mode: org; fill-column: 78; -*-
-# Time-stamp: <2025-04-05 15:23:31 krylon>
+# Time-stamp: <2025-04-05 16:40:56 krylon>
 #
 #+TAGS: internals(i) ui(u) bug(b) feature(f)
 #+TAGS: database(d) design(e), meditation(m)
@@ -22,32 +22,40 @@
   deploying a given configuration to several machines.
 ** Clocktable
    #+BEGIN: clocktable :scope file :maxlevel 202 :emphasize t
-   #+CAPTION: Clock summary at [2025-04-05 Sa 15:23]
+   #+CAPTION: Clock summary at [2025-04-05 Sa 16:40]
    | Headline                               | Time    |         |       |      |
    |----------------------------------------+---------+---------+-------+------|
-   | *Total time*                           | *16:06* |         |       |      |
+   | *Total time*                           | *16:37* |         |       |      |
    |----------------------------------------+---------+---------+-------+------|
-   | *Sloth [0/7]*                          | *16:06* |         |       |      |
+   | *Sloth [0/7]*                          | *16:37* |         |       |      |
+   | \_  /Platforms [2/6]/                  |         | /0:31/  |       |      |
+   | \_    Arch                             |         |         |  0:31 |      |
    | \_  /Components [0/1]/                 |         | /16:06/ |       |      |
    | \_    Call package managers [0/1]      |         |         | 16:06 |      |
    | \_      Parsing output or interfacing? |         |         |       | 7:50 |
    | \_      To root or not to root         |         |         |       | 0:20 |
    #+END:
 ** Features
-** Platforms [0/6]
+** Platforms [2/6]
    :PROPERTIES:
    :COOKIE_DATA: todo recursive
    :VISIBILITY: children
    :END:
    Support for platforms depends mainly on my ability to test on these,
    obviously.
-*** TODO openSUSE
+*** DONE openSUSE
+    CLOSED: [2025-04-05 Sa 15:37]
     I run Tumbleweed on two machines, openSUSE Leap on another, these are a
     high priority for me, obviously.
-*** TODO Debian
+*** DONE Debian
+    CLOSED: [2025-04-05 Sa 15:37]
     I run Debian (and Raspberry Pi OS) on several machines, so I want those
     supported as well.
 *** TODO Arch
+    :LOGBOOK:
+    CLOCK: [2025-04-05 Sa 16:25]--[2025-04-05 Sa 16:37] =>  0:12
+    CLOCK: [2025-04-05 Sa 15:38]--[2025-04-05 Sa 15:57] =>  0:19
+    :END:
     Arch was my initial motivation to start this project, because I find Arch's
     pacman to be rather complicated and unintuitive to use.
     I run Arch and Manjaro in a virtual machine each.
