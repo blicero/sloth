@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-05 15:19:57 krylon>
+# Time-stamp: <2025-04-05 15:32:33 krylon>
 #
 # /data/code/python/sloth/shell.py
 # created on 01. 04. 2025
@@ -17,6 +17,7 @@ sloth.shell
 """
 
 import atexit
+import html
 import logging
 import readline
 import shlex
@@ -90,7 +91,7 @@ class Shell(Cmd):
 
             results = dlg.run()
             if results:
-                print(results)
+                print([p.name for p in results])
         return False
 
     def do_upgrade(self, _arg: str) -> bool:
@@ -111,7 +112,7 @@ def pkg_fancy(p: Package) -> HTML:
     name: str = p.name
     if p.version:
         name += f"-{p.version}"
-    s = f"<b>{name}</b> - <u>{p.desc}</u>"
+    s = f"<b>{html.escape(name)}</b> - <u>{html.escape(p.desc)}</u>"
     return HTML(s)
 
 
