@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-04 23:46:02 krylon>
+# Time-stamp: <2025-04-05 15:22:09 krylon>
 #
 # /data/code/python/sloth/pkg.py
 # created on 18. 12. 2023
@@ -217,7 +217,7 @@ class APT(PackageManager):
         return results
 
 
-zyppPat: Final[re.Pattern] = re.compile(r"^ ([^|]+) \| \s+ (\S+) \s+ \| \s+ ([^|]+) \s+ \| \s+ (\S+) \s* $", re.X | re.M)
+zyppPat: Final[re.Pattern] = re.compile(r"^ ([^-|\n]+) \| \s+ (\S+) \s+ \| \s+ ([^|]+) \s+ \| \s+ (\S+) \s* $", re.X | re.M)
 
 
 class Zypper(PackageManager):
