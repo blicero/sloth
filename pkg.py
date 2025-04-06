@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-05 16:58:35 krylon>
+# Time-stamp: <2025-04-05 21:18:16 krylon>
 #
 # /data/code/python/sloth/pkg.py
 # created on 18. 12. 2023
@@ -341,6 +341,39 @@ class Pacman(PackageManager):
                 results.append(p)
 
         return results
+
+
+class DNF(PackageManager):
+    """DNF is the package manager on RHEL, Fedora, and their offspring."""
+
+    def pkg_cmd(self) -> list[str]:
+        """Return the command to execute the package manager."""
+        if self.sudo:
+            return [self.sudo, "dnf"]
+        return ["dnf"]
+
+    def refresh(self, **kwargs) -> None:
+        """Update the local package database"""
+        # dnf does not have an explicit command to refresh its database, as far as I can tell.
+        # But I suppose this is a useful approximation.
+        cmd = ["--refresh", "check-update"]
+        self._run(cmd)
+
+    def upgrade(self, **kwargs) -> None:
+        """Install available updates."""
+        cmd = ["upgrade"]
+        self._run(cmd)
+
+    def install(self, *args, **kwargs) -> None:
+        """Install packages"""
+        cmd = ["install"] + args
+        self._run(cmd)
+
+    def search(self, *args, **kwargs) -> list[Package]:
+        """Search the package database"""
+        self.log.debug("Searching for %s", BLANK.join(args))
+        cmd = ["search"] + args
+        self._run(cmd, True)
 
 # Local Variables: #
 # python-indent: 4 #

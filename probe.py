@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-05 16:47:54 krylon>
+# Time-stamp: <2025-04-05 18:05:39 krylon>
 #
 # /data/code/python/sloth/probe.py
 # created on 14. 12. 2023
@@ -69,6 +69,8 @@ def guess_os(osrel: str = OS_REL) -> Platform:
             case "raspbian":
                 return Platform("debian", info["version_id"], "raspberry-pi")
             case "opensuse-tumbleweed" | "opensuse-leap":
+                return Platform(info["id"], info["version_id"], "unknown")
+            case "fedora" | "rocky":
                 return Platform(info["id"], info["version_id"], "unknown")
             case "freebsd":
                 return Platform("freebsd", info["version_id"], "unknown")
