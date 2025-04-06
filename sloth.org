@@ -1,5 +1,5 @@
 # -*- mode: org; fill-column: 78; -*-
-# Time-stamp: <2025-04-05 16:40:56 krylon>
+# Time-stamp: <2025-04-06 16:52:31 krylon>
 #
 #+TAGS: internals(i) ui(u) bug(b) feature(f)
 #+TAGS: database(d) design(e), meditation(m)
@@ -22,21 +22,22 @@
   deploying a given configuration to several machines.
 ** Clocktable
    #+BEGIN: clocktable :scope file :maxlevel 202 :emphasize t
-   #+CAPTION: Clock summary at [2025-04-05 Sa 16:40]
+   #+CAPTION: Clock summary at [2025-04-06 So 16:52]
    | Headline                               | Time    |         |       |      |
    |----------------------------------------+---------+---------+-------+------|
-   | *Total time*                           | *16:37* |         |       |      |
+   | *Total time*                           | *17:44* |         |       |      |
    |----------------------------------------+---------+---------+-------+------|
-   | *Sloth [0/7]*                          | *16:37* |         |       |      |
-   | \_  /Platforms [2/6]/                  |         | /0:31/  |       |      |
+   | *Sloth [0/7]*                          | *17:44* |         |       |      |
+   | \_  /Platforms [3/7]/                  |         | /1:38/  |       |      |
    | \_    Arch                             |         |         |  0:31 |      |
+   | \_    Fedora / RHEL                    |         |         |  1:07 |      |
    | \_  /Components [0/1]/                 |         | /16:06/ |       |      |
    | \_    Call package managers [0/1]      |         |         | 16:06 |      |
    | \_      Parsing output or interfacing? |         |         |       | 7:50 |
    | \_      To root or not to root         |         |         |       | 0:20 |
    #+END:
 ** Features
-** Platforms [2/6]
+** Platforms [3/7]
    :PROPERTIES:
    :COOKIE_DATA: todo recursive
    :VISIBILITY: children
@@ -51,7 +52,8 @@
     CLOSED: [2025-04-05 Sa 15:37]
     I run Debian (and Raspberry Pi OS) on several machines, so I want those
     supported as well.
-*** TODO Arch
+*** DONE Arch
+    CLOSED: [2025-04-05 Sa 17:36]
     :LOGBOOK:
     CLOCK: [2025-04-05 Sa 16:25]--[2025-04-05 Sa 16:37] =>  0:12
     CLOCK: [2025-04-05 Sa 15:38]--[2025-04-05 Sa 15:57] =>  0:19
@@ -59,6 +61,14 @@
     Arch was my initial motivation to start this project, because I find Arch's
     pacman to be rather complicated and unintuitive to use.
     I run Arch and Manjaro in a virtual machine each.
+*** TODO Fedora / RHEL
+    :LOGBOOK:
+    CLOCK: [2025-04-05 Sa 20:50]--[2025-04-05 Sa 21:52] =>  1:02
+    CLOCK: [2025-04-05 Sa 18:05]--[2025-04-05 Sa 18:10] =>  0:05
+    :END:
+    Parsing the output of dnf is rather tricky, I think, but it turns out that
+    dnf - conveniently enough - is itself written in Python. So interfacing
+    should not be too hard.
 *** TODO FreeBSD
     I run FreeBSD on my home server, including a few jails, so I want these to
     work, too.
