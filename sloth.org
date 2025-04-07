@@ -1,5 +1,5 @@
 # -*- mode: org; fill-column: 78; -*-
-# Time-stamp: <2025-04-07 19:06:58 krylon>
+# Time-stamp: <2025-04-07 20:26:26 krylon>
 #
 #+TAGS: internals(i) ui(u) bug(b) feature(f)
 #+TAGS: database(d) design(e), meditation(m)
@@ -22,16 +22,16 @@
   deploying a given configuration to several machines.
 ** Clocktable
    #+BEGIN: clocktable :scope file :maxlevel 202 :emphasize t
-   #+CAPTION: Clock summary at [2025-04-07 Mo 19:06]
+   #+CAPTION: Clock summary at [2025-04-07 Mo 20:26]
    | Headline                               | Time    |         |       |      |
    |----------------------------------------+---------+---------+-------+------|
-   | *Total time*                           | *19:35* |         |       |      |
+   | *Total time*                           | *20:53* |         |       |      |
    |----------------------------------------+---------+---------+-------+------|
-   | *Sloth [0/7]*                          | *19:35* |         |       |      |
-   | \_  /Platforms [4/7]/                  |         | /3:29/  |       |      |
+   | *Sloth [0/7]*                          | *20:53* |         |       |      |
+   | \_  /Platforms [4/7]/                  |         | /4:47/  |       |      |
    | \_    Arch                             |         |         |  0:31 |      |
    | \_    Fedora / RHEL                    |         |         |  2:26 |      |
-   | \_    FreeBSD [0/0]                    |         |         |  0:32 |      |
+   | \_    FreeBSD [0/0]                    |         |         |  1:50 |      |
    | \_  /Components [0/1]/                 |         | /16:06/ |       |      |
    | \_    Call package managers [0/1]      |         |         | 16:06 |      |
    | \_      Parsing output or interfacing? |         |         |       | 7:50 |
@@ -84,6 +84,7 @@
     :VISIBILITY: children
     :END:
     :LOGBOOK:
+    CLOCK: [2025-04-07 Mo 19:08]--[2025-04-07 Mo 20:26] =>  1:18
     CLOCK: [2025-04-07 Mo 18:34]--[2025-04-07 Mo 19:06] =>  0:32
     :END:
     I run FreeBSD on my home server, including a few jails, so I want these to
