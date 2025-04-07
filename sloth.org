@@ -1,5 +1,5 @@
 # -*- mode: org; fill-column: 78; -*-
-# Time-stamp: <2025-04-07 08:46:37 krylon>
+# Time-stamp: <2025-04-07 18:34:01 krylon>
 #
 #+TAGS: internals(i) ui(u) bug(b) feature(f)
 #+TAGS: database(d) design(e), meditation(m)
@@ -22,22 +22,22 @@
   deploying a given configuration to several machines.
 ** Clocktable
    #+BEGIN: clocktable :scope file :maxlevel 202 :emphasize t
-   #+CAPTION: Clock summary at [2025-04-07 Mo 08:46]
+   #+CAPTION: Clock summary at [2025-04-07 Mo 18:33]
    | Headline                               | Time    |         |       |      |
    |----------------------------------------+---------+---------+-------+------|
-   | *Total time*                           | *18:03* |         |       |      |
+   | *Total time*                           | *19:03* |         |       |      |
    |----------------------------------------+---------+---------+-------+------|
-   | *Sloth [0/7]*                          | *18:03* |         |       |      |
-   | \_  /Platforms [3/7]/                  |         | /1:57/  |       |      |
+   | *Sloth [0/7]*                          | *19:03* |         |       |      |
+   | \_  /Platforms [4/7]/                  |         | /2:57/  |       |      |
    | \_    Arch                             |         |         |  0:31 |      |
-   | \_    Fedora / RHEL                    |         |         |  1:26 |      |
+   | \_    Fedora / RHEL                    |         |         |  2:26 |      |
    | \_  /Components [0/1]/                 |         | /16:06/ |       |      |
    | \_    Call package managers [0/1]      |         |         | 16:06 |      |
    | \_      Parsing output or interfacing? |         |         |       | 7:50 |
    | \_      To root or not to root         |         |         |       | 0:20 |
    #+END:
 ** Features
-** Platforms [3/7]
+** Platforms [4/7]
    :PROPERTIES:
    :COOKIE_DATA: todo recursive
    :VISIBILITY: children
@@ -61,8 +61,10 @@
     Arch was my initial motivation to start this project, because I find Arch's
     pacman to be rather complicated and unintuitive to use.
     I run Arch and Manjaro in a virtual machine each.
-*** TODO Fedora / RHEL
+*** DONE Fedora / RHEL
+    CLOSED: [2025-04-07 Mo 18:33]
     :LOGBOOK:
+    CLOCK: [2025-04-07 Mo 17:33]--[2025-04-07 Mo 18:33] =>  1:00
     CLOCK: [2025-04-07 Mo 08:27]--[2025-04-07 Mo 08:46] =>  0:19
     CLOCK: [2025-04-05 Sa 20:50]--[2025-04-05 Sa 21:52] =>  1:02
     CLOCK: [2025-04-05 Sa 18:05]--[2025-04-05 Sa 18:10] =>  0:05
@@ -70,6 +72,11 @@
     Parsing the output of dnf is rather tricky, I think, but it turns out that
     dnf - conveniently enough - is itself written in Python. So interfacing
     should not be too hard.
+    [2025-04-07 Mo 18:30]
+    It turns out that Rocky Linux (and thusly probably all other RHEL-ish
+    systems) is too much of a hassle right now to get working, because several
+    severly outdated components, including python itself and sqlite.
+    Fedora is no problem, but RHEL and its clones are off the table for now.
 *** TODO FreeBSD
     I run FreeBSD on my home server, including a few jails, so I want these to
     work, too.
