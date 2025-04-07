@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-05 21:18:16 krylon>
+# Time-stamp: <2025-04-07 08:45:55 krylon>
 #
 # /data/code/python/sloth/pkg.py
 # created on 18. 12. 2023
@@ -26,6 +26,11 @@ from enum import Enum, auto
 from typing import Final, Optional
 
 from sloth import common, probe
+
+try:
+    import dnf
+except ModuleNotFoundError:
+    pass
 
 BLANK: Final[str] = " "
 
@@ -75,6 +80,7 @@ class PackageManager(ABC):
         self.log = common.get_logger("PackageManager")
         self.log.debug("Running on %s", self.platform.name)
         self.output = ('', '')
+
         if not self.is_root():
             self.sudo = probe.find_sudo()
             if self.sudo is not None:
@@ -309,7 +315,7 @@ class Pacman(PackageManager):
 
     def install(self, *args, **kwargs) -> None:
         """Install packages"""
-        cmd = ["-S"] + args
+        cmd = ["-S"] + list(args)
         self._run(cmd)
 
     def search(self, *args, **kwargs) -> list[Package]:
@@ -366,14 +372,28 @@ class DNF(PackageManager):
 
     def install(self, *args, **kwargs) -> None:
         """Install packages"""
-        cmd = ["install"] + args
+        cmd = ["install"] + list(args)
         self._run(cmd)
 
     def search(self, *args, **kwargs) -> list[Package]:
         """Search the package database"""
         self.log.debug("Searching for %s", BLANK.join(args))
-        cmd = ["search"] + args
-        self._run(cmd, True)
+        # cmd = ["search"] + args
+        # self._run(cmd, True)
+        base = dnf.Base()
+        base.fill_sack()
+        q = base.sack.query().filter(name=args[0])
+        results = []
+        for p in q:
+            print(p)
+            pack = Package(
+                name=p.name,
+                desc=p.Description,
+                version=p.version,
+                info="i" if p.installed else "",
+                kind=p.reponame)
+            results.append(pack)
+        return results
 
 # Local Variables: #
 # python-indent: 4 #
