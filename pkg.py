@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-07 20:23:34 krylon>
+# Time-stamp: <2025-04-07 21:29:29 krylon>
 #
 # /data/code/python/sloth/pkg.py
 # created on 18. 12. 2023
@@ -189,9 +189,12 @@ class APT(PackageManager):
 
     def install(self, *args, **kwargs) -> None:
         """Install one or more packages."""
+        assert len(args) > 0
         self.log.debug("Install %s",
                        ", ".join(args))
-        raise NotImplementedError("Installing packages is not implemented, yet.")
+        cmd = ["install"]
+        cmd.extend(args)
+        self._run(cmd)
 
     def search(self, *args, **kwargs) -> list[Package]:
         """Search for available packages."""
@@ -258,7 +261,9 @@ class Zypper(PackageManager):
         """Install one or more packages."""
         self.log.debug("Install %s",
                        ", ".join(args))
-        raise NotImplementedError("Installing packages is not implemented, yet.")
+        cmd = ["install"]
+        cmd.extend(args)
+        self._run(cmd)
 
     def search(self, *args, **kwargs) -> list[Package]:
         """Search the package database."""
@@ -410,8 +415,7 @@ class FreeBSD(PackageManager):
         """Return the path to the package manager."""
         if self.sudo is not None:
             return [self.sudo, "/usr/sbin/pkg"]
-        else:
-            return ["/usr/sbin/pkg"]
+        return ["/usr/sbin/pkg"]
 
     def refresh(self, **kwargs) -> None:
         """Update the local package database."""
