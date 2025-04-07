@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-07 19:17:48 krylon>
+# Time-stamp: <2025-04-07 21:29:14 krylon>
 #
 # /data/code/python/sloth/shell.py
 # created on 01. 04. 2025
@@ -28,7 +28,7 @@ from prompt_toolkit import HTML
 from prompt_toolkit.shortcuts import checkboxlist_dialog
 
 from sloth import common, database, pkg
-from sloth.pkg import Package
+from sloth.pkg import Operation, Package
 
 
 class Shell(Cmd):
@@ -74,7 +74,9 @@ class Shell(Cmd):
 
     def do_refresh(self, _arg: str) -> bool:
         """Refresh the package database."""
-        self.pk.refresh()
+        with self.db:
+            self.pk.refresh()
+            self.db.op_add(Operation.Refresh, "", 0)
         return False
 
     def do_search(self, arg: str) -> bool:
@@ -97,7 +99,29 @@ class Shell(Cmd):
     def do_upgrade(self, _arg: str) -> bool:
         """Install pending updates."""
         self.log.debug("Update existing packages.")
-        self.pk.upgrade()
+        with self.db:
+            self.pk.upgrade()
+            self.db.op_add(Operation.Upgrade, "", 0)
+        return False
+
+    def do_install(self, arg: str) -> bool:
+        """Install one or more package(s)."""
+        self.log.info("About to install %s", arg)
+        packages = self.pk.search(*shlex.split(arg))
+        if len(packages) == 0:
+            return False
+        with self.db:
+            self.pk.install(*packages)
+            self.db.op_add(Operation.Install, arg, 0)
+            return False
+
+    def do_remove(self, arg: str) -> bool:
+        """Remove package(s)."""
+        self.log.info("About to remove %s", arg)
+        packages = shlex.split(arg)
+        if len(packages) == 0:
+            return False
+        print("Uninstall is not implemented, yet.")
         return False
 
     def do_EOF(self, _) -> bool:
