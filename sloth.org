@@ -1,5 +1,5 @@
 # -*- mode: org; fill-column: 78; -*-
-# Time-stamp: <2025-04-06 16:52:31 krylon>
+# Time-stamp: <2025-04-07 08:46:37 krylon>
 #
 #+TAGS: internals(i) ui(u) bug(b) feature(f)
 #+TAGS: database(d) design(e), meditation(m)
@@ -22,15 +22,15 @@
   deploying a given configuration to several machines.
 ** Clocktable
    #+BEGIN: clocktable :scope file :maxlevel 202 :emphasize t
-   #+CAPTION: Clock summary at [2025-04-06 So 16:52]
+   #+CAPTION: Clock summary at [2025-04-07 Mo 08:46]
    | Headline                               | Time    |         |       |      |
    |----------------------------------------+---------+---------+-------+------|
-   | *Total time*                           | *17:44* |         |       |      |
+   | *Total time*                           | *18:03* |         |       |      |
    |----------------------------------------+---------+---------+-------+------|
-   | *Sloth [0/7]*                          | *17:44* |         |       |      |
-   | \_  /Platforms [3/7]/                  |         | /1:38/  |       |      |
+   | *Sloth [0/7]*                          | *18:03* |         |       |      |
+   | \_  /Platforms [3/7]/                  |         | /1:57/  |       |      |
    | \_    Arch                             |         |         |  0:31 |      |
-   | \_    Fedora / RHEL                    |         |         |  1:07 |      |
+   | \_    Fedora / RHEL                    |         |         |  1:26 |      |
    | \_  /Components [0/1]/                 |         | /16:06/ |       |      |
    | \_    Call package managers [0/1]      |         |         | 16:06 |      |
    | \_      Parsing output or interfacing? |         |         |       | 7:50 |
@@ -63,6 +63,7 @@
     I run Arch and Manjaro in a virtual machine each.
 *** TODO Fedora / RHEL
     :LOGBOOK:
+    CLOCK: [2025-04-07 Mo 08:27]--[2025-04-07 Mo 08:46] =>  0:19
     CLOCK: [2025-04-05 Sa 20:50]--[2025-04-05 Sa 21:52] =>  1:02
     CLOCK: [2025-04-05 Sa 18:05]--[2025-04-05 Sa 18:10] =>  0:05
     :END:
