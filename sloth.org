@@ -1,5 +1,5 @@
 # -*- mode: org; fill-column: 78; -*-
-# Time-stamp: <2025-04-07 21:11:26 krylon>
+# Time-stamp: <2025-04-07 21:49:36 krylon>
 #
 #+TAGS: internals(i) ui(u) bug(b) feature(f)
 #+TAGS: database(d) design(e), meditation(m)
@@ -22,17 +22,19 @@
   deploying a given configuration to several machines.
 ** Clocktable
    #+BEGIN: clocktable :scope file :maxlevel 202 :emphasize t
-   #+CAPTION: Clock summary at [2025-04-07 Mo 21:11]
+   #+CAPTION: Clock summary at [2025-04-07 Mo 21:49]
    | Headline                               | Time    |         |       |      |
    |----------------------------------------+---------+---------+-------+------|
-   | *Total time*                           | *20:53* |         |       |      |
+   | *Total time*                           | *21:27* |         |       |      |
    |----------------------------------------+---------+---------+-------+------|
-   | *Sloth [4/9]*                          | *20:53* |         |       |      |
+   | *Sloth [4/9]*                          | *21:27* |         |       |      |
    | \_  /Platforms [4/7]/                  |         | /4:47/  |       |      |
    | \_    Arch                             |         |         |  0:31 |      |
    | \_    Fedora / RHEL                    |         |         |  2:26 |      |
    | \_    FreeBSD [0/0]                    |         |         |  1:50 |      |
-   | \_  /Components [0/2]/                 |         | /16:06/ |       |      |
+   | \_  /Components [0/2]/                 |         | /16:40/ |       |      |
+   | \_    Bucket list [0/1]                |         |         |  0:34 |      |
+   | \_      Use the damn database already! |         |         |       | 0:34 |
    | \_    Call package managers [0/1]      |         |         | 16:06 |      |
    | \_      Parsing output or interfacing? |         |         |       | 7:50 |
    | \_      To root or not to root         |         |         |       | 0:20 |
@@ -114,6 +116,9 @@
     :VISIBILITY: children
     :END:
 **** TODO Use the damn database already!
+     :LOGBOOK:
+     CLOCK: [2025-04-07 Mo 21:15]--[2025-04-07 Mo 21:49] =>  0:34
+     :END:
      This was after all what made me start the whole thing, I wanted to avoid
      checking for updates over and over, being forgetful and stuff.
 *** Probe [0/0]
