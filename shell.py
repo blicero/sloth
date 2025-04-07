@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-05 15:32:33 krylon>
+# Time-stamp: <2025-04-07 19:17:48 krylon>
 #
 # /data/code/python/sloth/shell.py
 # created on 01. 04. 2025
@@ -84,7 +84,7 @@ class Shell(Cmd):
         if len(packages) > 0:
             dlg = checkboxlist_dialog(
                 title="Results",
-                text=f"Search results for '{arg}'",
+                text=f"{len(packages)} Search results for '{arg}'",
                 values=[(x, pkg_fancy(x)) for x in packages],
                 default_values=[x for x in packages if x.info],
             )
