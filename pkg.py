@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-07 19:06:31 krylon>
+# Time-stamp: <2025-04-07 20:23:34 krylon>
 #
 # /data/code/python/sloth/pkg.py
 # created on 18. 12. 2023
@@ -399,7 +399,8 @@ class DNF(PackageManager):
         return results
 
 
-pkgPat: Final[re.Pattern] = re.compile(r"^(\w+?)-(\d\S+) \s+ (.*)$", re.M | re.X)
+pkgPat: Final[re.Pattern] = re.compile(r"""^([-_a-zA-Z0-9]+?)-(\d\S+)\s+(.*)""",
+                                       re.M | re.X)
 
 
 class FreeBSD(PackageManager):
@@ -440,7 +441,11 @@ class FreeBSD(PackageManager):
                            self.output[0],
                            self.output[1])
         else:
-            pass
+            for i in m:
+                p = Package(name=i[0],
+                            version=i[1],
+                            desc=i[2])
+                results.append(p)
 
         return results
 
