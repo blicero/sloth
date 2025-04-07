@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-07 08:45:55 krylon>
+# Time-stamp: <2025-04-07 09:33:51 krylon>
 #
 # /data/code/python/sloth/pkg.py
 # created on 18. 12. 2023
@@ -100,6 +100,8 @@ class PackageManager(ABC):
                 return Zypper()
             case "arch":
                 return Pacman()
+            case "fedora" | "rocky":
+                return DNF()
             case _:
                 raise RuntimeError(f"Unsupported platform: {system[0]}")
 
@@ -382,13 +384,13 @@ class DNF(PackageManager):
         # self._run(cmd, True)
         base = dnf.Base()
         base.fill_sack()
-        q = base.sack.query().filter(name=args[0])
+        q = base.sack.query().filter(name__substr=args[0])
         results = []
-        for p in q:
+        for p in q.run():
             print(p)
             pack = Package(
                 name=p.name,
-                desc=p.Description,
+                desc=p.summary,
                 version=p.version,
                 info="i" if p.installed else "",
                 kind=p.reponame)
