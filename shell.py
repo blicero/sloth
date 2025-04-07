@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-07 21:29:14 krylon>
+# Time-stamp: <2025-04-07 22:30:41 krylon>
 #
 # /data/code/python/sloth/shell.py
 # created on 01. 04. 2025
@@ -107,7 +107,7 @@ class Shell(Cmd):
     def do_install(self, arg: str) -> bool:
         """Install one or more package(s)."""
         self.log.info("About to install %s", arg)
-        packages = self.pk.search(*shlex.split(arg))
+        packages = shlex.split(arg)
         if len(packages) == 0:
             return False
         with self.db:
