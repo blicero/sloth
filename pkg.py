@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-07 09:33:51 krylon>
+# Time-stamp: <2025-04-07 19:06:31 krylon>
 #
 # /data/code/python/sloth/pkg.py
 # created on 18. 12. 2023
@@ -102,6 +102,8 @@ class PackageManager(ABC):
                 return Pacman()
             case "fedora" | "rocky":
                 return DNF()
+            case "freebsd":
+                return FreeBSD()
             case _:
                 raise RuntimeError(f"Unsupported platform: {system[0]}")
 
@@ -194,8 +196,7 @@ class APT(PackageManager):
     def search(self, *args, **kwargs) -> list[Package]:
         """Search for available packages."""
         self.log.debug("Search %s", BLANK.join(args))
-        cmd: list[str] = []
-        cmd.append("search")
+        cmd: list[str] = ["search"]
         cmd.extend(args)
         self._run(cmd, True)
         m = aptPat.findall(self.output[0])
@@ -395,6 +396,52 @@ class DNF(PackageManager):
                 info="i" if p.installed else "",
                 kind=p.reponame)
             results.append(pack)
+        return results
+
+
+pkgPat: Final[re.Pattern] = re.compile(r"^(\w+?)-(\d\S+) \s+ (.*)$", re.M | re.X)
+
+
+class FreeBSD(PackageManager):
+    """FreeBSD provides support for the FreeBSD operating system (hence the name)."""
+
+    def pkg_cmd(self) -> list[str]:
+        """Return the path to the package manager."""
+        if self.sudo is not None:
+            return [self.sudo, "/usr/sbin/pkg"]
+        else:
+            return ["/usr/sbin/pkg"]
+
+    def refresh(self, **kwargs) -> None:
+        """Update the local package database."""
+        cmd = ["update"]
+        self._run(cmd)
+
+    def upgrade(self, **kwargs) -> None:
+        """Install available updates."""
+        cmd = ["upgrade"]
+        self._run(cmd)
+
+    def install(self, *args, **kwargs) -> None:
+        """Install one or more packages."""
+        cmd = ["install"] + list(args)
+        self._run(cmd)
+
+    def search(self, *args, **kwargs) -> list[Package]:
+        """Search for available packages."""
+        cmd: list[str] = ["search"]
+        cmd.extend(args)
+        self._run(cmd, True)
+        m = pkgPat.findall(self.output[0])
+        results: list[Package] = []
+
+        if len(m) == 0:
+            self.log.error("Cannot parse output of pkg(8):\n%s\n%s\n",
+                           self.output[0],
+                           self.output[1])
+        else:
+            pass
+
         return results
 
 # Local Variables: #
