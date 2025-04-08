@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-02 09:38:50 krylon>
+# Time-stamp: <2025-04-08 20:58:15 krylon>
 #
 # /data/code/python/sloth/common.py
 # created on 14. 12. 2023
@@ -60,6 +60,10 @@ class Path:
     def histfile(self) -> str:
         """Return the path of the shell history file"""
         return os.path.join(self.__base, "shell.history")
+
+    def config(self) -> str:
+        """Return the path of the configuration file."""
+        return os.path.join(self.__base, "sloth.toml")
 
 
 path: Path = Path(os.path.expanduser(f"~/.{APP_NAME.lower()}.d"))
