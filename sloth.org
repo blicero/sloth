@@ -1,5 +1,5 @@
 # -*- mode: org; fill-column: 78; -*-
-# Time-stamp: <2025-04-07 21:49:36 krylon>
+# Time-stamp: <2025-04-08 12:35:51 krylon>
 #
 #+TAGS: internals(i) ui(u) bug(b) feature(f)
 #+TAGS: database(d) design(e), meditation(m)
@@ -8,7 +8,7 @@
 #+TODO: MEDITATE(m) PLANNING(p) | SUSPENDED(s)
 #+PRIORITIES: A G D
 
-* Sloth [4/9]
+* Sloth [5/9]
   :PROPERTIES:
   :COOKIE_DATA: todo recursive
   :VISIBILITY: children
@@ -22,20 +22,20 @@
   deploying a given configuration to several machines.
 ** Clocktable
    #+BEGIN: clocktable :scope file :maxlevel 202 :emphasize t
-   #+CAPTION: Clock summary at [2025-04-07 Mo 21:49]
+   #+CAPTION: Clock summary at [2025-04-08 Di 12:35]
    | Headline                               | Time    |         |       |      |
    |----------------------------------------+---------+---------+-------+------|
-   | *Total time*                           | *21:27* |         |       |      |
+   | *Total time*                           | *21:32* |         |       |      |
    |----------------------------------------+---------+---------+-------+------|
-   | *Sloth [4/9]*                          | *21:27* |         |       |      |
+   | *Sloth [5/9]*                          | *21:32* |         |       |      |
    | \_  /Platforms [4/7]/                  |         | /4:47/  |       |      |
    | \_    Arch                             |         |         |  0:31 |      |
    | \_    Fedora / RHEL                    |         |         |  2:26 |      |
    | \_    FreeBSD [0/0]                    |         |         |  1:50 |      |
-   | \_  /Components [0/2]/                 |         | /16:40/ |       |      |
+   | \_  /Components [1/2]/                 |         | /16:45/ |       |      |
    | \_    Bucket list [0/1]                |         |         |  0:34 |      |
    | \_      Use the damn database already! |         |         |       | 0:34 |
-   | \_    Call package managers [0/1]      |         |         | 16:06 |      |
+   | \_    Call package managers [1/1]      |         |         | 16:11 |      |
    | \_      Parsing output or interfacing? |         |         |       | 7:50 |
    | \_      To root or not to root         |         |         |       | 0:20 |
    #+END:
@@ -105,7 +105,7 @@
 **** pkg_add/del/etc
 *** TODO [#E] pkgsrc
     Maybe. It's not a priority, though.
-** Components [0/2]
+** Components [1/2]
   :PROPERTIES:
   :COOKIE_DATA: todo recursive
   :VISIBILITY: children
@@ -138,12 +138,13 @@
     machine-readable form.
     What data do I want to store, and how do I model it? Should I defer this
     until I have some insight into what I actually *do*?
-*** Call package managers [0/1]
+*** Call package managers [1/1]
     :PROPERTIES:
     :COOKIE_DATA: todo recursive
     :VISIBILITY: children
     :END:
     :LOGBOOK:
+    CLOCK: [2025-04-08 Di 12:30]--[2025-04-08 Di 12:35] =>  0:05
     CLOCK: [2025-04-03 Do 20:32]--[2025-04-03 Do 21:57] =>  1:25
     CLOCK: [2025-04-03 Do 17:40]--[2025-04-03 Do 18:34] =>  0:54
     CLOCK: [2025-04-02 Mi 17:23]--[2025-04-02 Mi 18:55] =>  1:32
@@ -171,7 +172,8 @@
      If the package manager had some kind of interface we can use from Python
      instead of running a command, that would be even nicer. And on Debian, it
      exists!
-**** TODO To root or not to root
+**** DONE To root or not to root
+     CLOSED: [2025-04-08 Di 12:30]
      :LOGBOOK:
      CLOCK: [2025-04-01 Di 15:24]--[2025-04-01 Di 15:44] =>  0:20
      :END:
