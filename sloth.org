@@ -1,5 +1,5 @@
 # -*- mode: org; fill-column: 78; -*-
-# Time-stamp: <2025-04-08 12:35:51 krylon>
+# Time-stamp: <2025-04-08 17:32:50 krylon>
 #
 #+TAGS: internals(i) ui(u) bug(b) feature(f)
 #+TAGS: database(d) design(e), meditation(m)
@@ -22,22 +22,23 @@
   deploying a given configuration to several machines.
 ** Clocktable
    #+BEGIN: clocktable :scope file :maxlevel 202 :emphasize t
-   #+CAPTION: Clock summary at [2025-04-08 Di 12:35]
+   #+CAPTION: Clock summary at [2025-04-08 Di 17:32]
    | Headline                               | Time    |         |       |      |
    |----------------------------------------+---------+---------+-------+------|
-   | *Total time*                           | *21:32* |         |       |      |
+   | *Total time*                           | *22:22* |         |       |      |
    |----------------------------------------+---------+---------+-------+------|
-   | *Sloth [5/9]*                          | *21:32* |         |       |      |
+   | *Sloth [5/9]*                          | *22:22* |         |       |      |
    | \_  /Platforms [4/7]/                  |         | /4:47/  |       |      |
    | \_    Arch                             |         |         |  0:31 |      |
    | \_    Fedora / RHEL                    |         |         |  2:26 |      |
    | \_    FreeBSD [0/0]                    |         |         |  1:50 |      |
-   | \_  /Components [1/2]/                 |         | /16:45/ |       |      |
+   | \_  /Components [1/2]/                 |         | /17:35/ |       |      |
    | \_    Bucket list [0/1]                |         |         |  0:34 |      |
    | \_      Use the damn database already! |         |         |       | 0:34 |
-   | \_    Call package managers [1/1]      |         |         | 16:11 |      |
+   | \_    Call package managers [1/1]      |         |         | 16:35 |      |
    | \_      Parsing output or interfacing? |         |         |       | 7:50 |
    | \_      To root or not to root         |         |         |       | 0:20 |
+   | \_    Shell [0/0]                      |         |         |  0:26 |      |
    #+END:
 ** Features
 ** Platforms [4/7]
@@ -144,6 +145,7 @@
     :VISIBILITY: children
     :END:
     :LOGBOOK:
+    CLOCK: [2025-04-08 Di 16:41]--[2025-04-08 Di 17:05] =>  0:24
     CLOCK: [2025-04-08 Di 12:30]--[2025-04-08 Di 12:35] =>  0:05
     CLOCK: [2025-04-03 Do 20:32]--[2025-04-03 Do 21:57] =>  1:25
     CLOCK: [2025-04-03 Do 17:40]--[2025-04-03 Do 18:34] =>  0:54
@@ -184,4 +186,11 @@
      1. os.getuid() for the UID
      2. shutil.which() to check if a command is available
      3. subprocess.run() to execute a command.
-
+*** Shell [0/0]
+    :PROPERTIES:
+    :COOKIE_DATA: todo recursive
+    :VISIBILITY: children
+    :END:
+    :LOGBOOK:
+    CLOCK: [2025-04-08 Di 17:06]--[2025-04-08 Di 17:32] =>  0:26
+    :END:
