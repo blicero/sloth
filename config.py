@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-08 21:37:40 krylon>
+# Time-stamp: <2025-04-08 23:46:17 krylon>
 #
 # /data/code/python/sloth/config.py
 # created on 08. 04. 2025
@@ -19,7 +19,9 @@ sloth.config
 
 import logging
 
-from tomlkit import TOMLDocument, loads
+from krylib import fexist
+from tomlkit import TOMLDocument
+from tomlkit.toml_file import TOMLFile
 
 from sloth import common
 
@@ -35,15 +37,20 @@ class Config:
     path: str
     log: logging.Logger
     cfg: TOMLDocument
+    file: TOMLFile
 
     def __init__(self, path: str = "") -> None:
         if path == "":
             path = common.path.config()
         self.path = path
         self.log = common.get_logger("config")
-        with open(self.path, "r", encoding="utf-8") as fh:
-            self.cfg = loads(fh)
+        if fexist(path):
+            self.file = TOMLFile(self.path)
+            self.cfg = self.file.read()
 
+    def save(self) -> None:
+        """Write the configuration state to disk."""
+        self.file.write(self.cfg)
 
 # Local Variables: #
 # python-indent: 4 #
