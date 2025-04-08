@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-07 22:30:41 krylon>
+# Time-stamp: <2025-04-08 17:31:23 krylon>
 #
 # /data/code/python/sloth/shell.py
 # created on 01. 04. 2025
@@ -121,7 +121,25 @@ class Shell(Cmd):
         packages = shlex.split(arg)
         if len(packages) == 0:
             return False
-        print("Uninstall is not implemented, yet.")
+        with self.db:
+            self.pk.remove(packages)
+            self.db.op_add(Operation.Delete, arg, 0)
+        return False
+
+    def do_autoremove(self, _arg: str) -> bool:
+        """Remove unneeded packages."""
+        self.log.info("Remove unneeded packages.")
+        with self.db:
+            self.pk.autoremove()
+            self.db.op_add(Operation.Autoremove, "", 0)
+        return False
+
+    def clean(self, _arg: str) -> bool:
+        """Clean the package cache."""
+        self.log.info("Clean local package cache.")
+        with self.db:
+            self.pk.cleanup()
+            self.db.op_add(Operation.Cleanup, "", 0)
         return False
 
     def do_EOF(self, _) -> bool:

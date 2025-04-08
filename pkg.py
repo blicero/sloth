@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-07 21:29:29 krylon>
+# Time-stamp: <2025-04-08 17:04:38 krylon>
 #
 # /data/code/python/sloth/pkg.py
 # created on 18. 12. 2023
@@ -124,12 +124,24 @@ class PackageManager(ABC):
         """
 
     @abstractmethod
+    def remove(self, *args, **kwargs) -> None:
+        """Remove one or more packages"""
+
+    @abstractmethod
     def upgrade(self, **kwargs) -> None:
         """Install any pending updates."""
 
     @abstractmethod
     def search(self, *arg, **kwargs) -> list[Package]:
         """Search for available packages."""
+
+    @abstractmethod
+    def autoremove(self, *args, **kwargs) -> None:
+        """Remove unneeded packages."""
+
+    @abstractmethod
+    def cleanup(self, *args, **kwargs) -> None:
+        """Clean up downloaded packages."""
 
     def is_root(self) -> bool:
         """Return true if we are running with root privileges."""
@@ -185,6 +197,8 @@ class APT(PackageManager):
     def upgrade(self, **kwargs) -> None:
         """Install any pending updates."""
         cmd = ["full-upgrade"]
+        if "yes" in kwargs:
+            cmd.append("-y")
         self._run(cmd)
 
     def install(self, *args, **kwargs) -> None:
@@ -194,6 +208,28 @@ class APT(PackageManager):
                        ", ".join(args))
         cmd = ["install"]
         cmd.extend(args)
+        self._run(cmd)
+
+    def remove(self, *args, **kwargs) -> None:
+        """Remove one or more packages."""
+        assert len(args) > 0
+        self.log.debug("Remove %s", BLANK.join(args))
+        cmd = ["remove"]
+        cmd.extend(args)
+        self._run(cmd)
+
+    def autoremove(self, *args, **kwargs) -> None:
+        """Remove unneeded packages."""
+        self.log.debug("Remove unneeded packages.")
+        if "purge" in args:
+            cmd = ["autopurge"]
+        else:
+            cmd = ["autoremove"]
+        self._run(cmd)
+
+    def cleanup(self, *args, **kwargs) -> None:
+        """Clean up downloaded packages."""
+        cmd = ["clean"]
         self._run(cmd)
 
     def search(self, *args, **kwargs) -> list[Package]:
@@ -265,6 +301,21 @@ class Zypper(PackageManager):
         cmd.extend(args)
         self._run(cmd)
 
+    def remove(self, *args, **kwargs) -> None:
+        """Remove one or more packages."""
+        cmd = ["rm", "-u"]
+        cmd.extend(args)
+        self._run(cmd)
+
+    def autoremove(self, *args, **kwargs) -> None:
+        """Remove unneeded packages."""
+        self.log.info("autoremove is a no-op on zypper.")
+
+    def cleanup(self, *args, **kwargs) -> None:
+        """Clean up downloaded packages."""
+        cmd = ["clean", "--all"]
+        self._run(cmd)
+
     def search(self, *args, **kwargs) -> list[Package]:
         """Search the package database."""
         self.log.debug("Search %s", BLANK.join(args))
@@ -326,6 +377,22 @@ class Pacman(PackageManager):
         cmd = ["-S"] + list(args)
         self._run(cmd)
 
+    def remove(self, *args, **kwargs) -> None:
+        """Remove one or more packages."""
+        cmd = ["-R"]
+        cmd.extend(args)
+        self._run(cmd)
+
+    def autoremove(self, *args, **kwargs) -> None:
+        """Remove unneeded packages."""
+        cmd = ["-R", "-u"]
+        self._run(cmd)
+
+    def cleanup(self, *args, **kwargs) -> None:
+        """Clean up downloaded packages."""
+        cmd = ["-Scc"]
+        self._run(cmd)
+
     def search(self, *args, **kwargs) -> list[Package]:
         """Search for available packages"""
         self.log.debug("Search %s", BLANK.join(args))
@@ -383,6 +450,22 @@ class DNF(PackageManager):
         cmd = ["install"] + list(args)
         self._run(cmd)
 
+    def remove(self, *args, **kwargs) -> None:
+        """Remove one or more packages."""
+        cmd = ["remove"]
+        cmd.extend(args)
+        self._run(cmd)
+
+    def autoremove(self, *args, **kwargs) -> None:
+        """Remove unneeded packages."""
+        cmd = ["autoremove"]
+        self._run(cmd)
+
+    def cleanup(self, *args, **kwargs) -> None:
+        """Clean up downloaded packages."""
+        cmd = ["clean"]
+        self._run(cmd)
+
     def search(self, *args, **kwargs) -> list[Package]:
         """Search the package database"""
         self.log.debug("Searching for %s", BLANK.join(args))
@@ -430,6 +513,22 @@ class FreeBSD(PackageManager):
     def install(self, *args, **kwargs) -> None:
         """Install one or more packages."""
         cmd = ["install"] + list(args)
+        self._run(cmd)
+
+    def remove(self, *args, **kwargs) -> None:
+        """Remove one or more packages."""
+        cmd = ["delete"]
+        cmd.extend(args)
+        self._run(cmd)
+
+    def autoremove(self, *args, **kwargs) -> None:
+        """Remove unneeded packages."""
+        cmd = ["autoremove"]
+        self._run(cmd)
+
+    def cleanup(self, *args, **kwargs) -> None:
+        """Clean up downloaded packages."""
+        cmd = ["clean"]
         self._run(cmd)
 
     def search(self, *args, **kwargs) -> list[Package]:
