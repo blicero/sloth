@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-08 23:46:17 krylon>
+# Time-stamp: <2025-04-09 22:24:52 krylon>
 #
 # /data/code/python/sloth/config.py
 # created on 08. 04. 2025
@@ -32,6 +32,8 @@ class Config:
     __slots__ = [
         "path",
         "log",
+        "cfg",
+        "file",
     ]
 
     path: str

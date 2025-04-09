@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-08 17:31:23 krylon>
+# Time-stamp: <2025-04-09 22:16:21 krylon>
 #
 # /data/code/python/sloth/shell.py
 # created on 01. 04. 2025
@@ -22,12 +22,13 @@ import logging
 import readline
 import shlex
 from cmd import Cmd
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from prompt_toolkit import HTML
-from prompt_toolkit.shortcuts import checkboxlist_dialog
+from prompt_toolkit.shortcuts import checkboxlist_dialog, confirm
 
 from sloth import common, database, pkg
+from sloth.config import Config
 from sloth.pkg import Operation, Package
 
 
@@ -45,6 +46,10 @@ class Shell(Cmd):
     log: logging.Logger
     pk: pkg.PackageManager
     timestamp: datetime
+    cfg: Config
+    refresh_interval: timedelta
+    auto_yes: bool
+    remove_deps: bool
 
     def __init__(self) -> None:
         super().__init__()
@@ -59,6 +64,10 @@ class Shell(Cmd):
             pass
         finally:
             atexit.register(readline.write_history_file, common.path.histfile())
+        self.cfg: Config = Config()
+        self.refresh_interval = timedelta(seconds=self.cfg.cfg["shell"]["refresh-interval"])
+        self.auto_yes = self.cfg.cfg["shell"]["say-yes"]
+        self.remove_deps = self.cfg.cfg["shell"]["remove-dependencies"]
 
     def precmd(self, line) -> str:
         """Save the time before executing the command."""
@@ -71,6 +80,14 @@ class Shell(Cmd):
         delta = after - self.timestamp
         print(f"Command started at {self.timestamp:%Y-%m-%d %H:%M:%S} and took {delta} to execute")
         return stop
+
+    def refresh_due(self) -> bool:
+        """Return true if a refresh of the local package cache is due."""
+        op = self.db.op_get_most_recent(Operation.Refresh)
+        if op is None:
+            return True
+        delta = datetime.now() - op["timestamp"]
+        return delta > self.refresh_interval
 
     def do_refresh(self, _arg: str) -> bool:
         """Refresh the package database."""
@@ -100,6 +117,9 @@ class Shell(Cmd):
         """Install pending updates."""
         self.log.debug("Update existing packages.")
         with self.db:
+            if self.refresh_due() and confirm("Refresh package cache?"):
+                self.pk.refresh()
+                self.db.op_add(Operation.Refresh, "", 0)
             self.pk.upgrade()
             self.db.op_add(Operation.Upgrade, "", 0)
         return False
@@ -111,6 +131,9 @@ class Shell(Cmd):
         if len(packages) == 0:
             return False
         with self.db:
+            if self.refresh_due() and confirm("Refresh package cache?"):
+                self.pk.refresh()
+                self.db.op_add(Operation.Refresh, "", 0)
             self.pk.install(*packages)
             self.db.op_add(Operation.Install, arg, 0)
             return False
