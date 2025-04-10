@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-02 10:15:32 krylon>
+# Time-stamp: <2025-04-09 23:38:32 krylon>
 #
 # /data/code/python/sloth/database.py
 # created on 18. 12. 2023
@@ -158,7 +158,7 @@ class Database:
     def op_get_most_recent(self, op: Operation) -> Optional[dict]:
         """Get the most recent instance of the given Operation."""
         cur: sqlite3.Cursor = self.db.cursor()
-        cur.execute(db_queries[QueryID.OpGetMostRecent], (op, ))
+        cur.execute(db_queries[QueryID.OpGetMostRecent], (op.value, ))
         row = cur.fetchone()
         if row is not None:
             return {
