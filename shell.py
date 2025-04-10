@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-09 22:16:21 krylon>
+# Time-stamp: <2025-04-10 19:12:28 krylon>
 #
 # /data/code/python/sloth/shell.py
 # created on 01. 04. 2025
@@ -113,15 +113,17 @@ class Shell(Cmd):
                 print([p.name for p in results])
         return False
 
-    def do_upgrade(self, _arg: str) -> bool:
+    def do_upgrade(self, arg: str) -> bool:
         """Install pending updates."""
         self.log.debug("Update existing packages.")
+        args = shlex.split(arg)
         with self.db:
-            if self.refresh_due() and confirm("Refresh package cache?"):
+            if ("-r" in args) or \
+               (self.refresh_due() and confirm("Refresh package cache?")):
                 self.pk.refresh()
                 self.db.op_add(Operation.Refresh, "", 0)
             self.pk.upgrade()
-            self.db.op_add(Operation.Upgrade, "", 0)
+            self.db.op_add(Operation.Upgrade, arg, 0)
         return False
 
     def do_install(self, arg: str) -> bool:
