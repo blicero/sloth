@@ -1,5 +1,5 @@
 # -*- mode: org; fill-column: 78; -*-
-# Time-stamp: <2025-04-11 16:53:35 krylon>
+# Time-stamp: <2025-04-11 21:07:21 krylon>
 #
 #+TAGS: internals(i) ui(u) bug(b) feature(f)
 #+TAGS: database(d) design(e), meditation(m)
@@ -22,26 +22,26 @@
   deploying a given configuration to several machines.
 ** Clocktable
    #+BEGIN: clocktable :scope file :maxlevel 202 :emphasize t
-   #+CAPTION: Clock summary at [2025-04-10 Do 20:15]
+   #+CAPTION: Clock summary at [2025-04-11 Fr 21:07]
    | Headline                               | Time      |         |       |      |
    |----------------------------------------+-----------+---------+-------+------|
-   | *Total time*                           | *1d 1:49* |         |       |      |
+   | *Total time*                           | *1d 2:27* |         |       |      |
    |----------------------------------------+-----------+---------+-------+------|
-   | *Sloth [7/13]*                         | *1d 1:49* |         |       |      |
+   | *Sloth [7/13]*                         | *1d 2:27* |         |       |      |
    | \_  /Features [2/4]/                   |           | /0:04/  |       |      |
    | \_    Fused refresh-upgrade            |           |         |  0:04 |      |
    | \_  /Platforms [4/7]/                  |           | /4:47/  |       |      |
    | \_    Arch                             |           |         |  0:31 |      |
    | \_    Fedora / RHEL                    |           |         |  2:26 |      |
    | \_    FreeBSD [0/0]                    |           |         |  1:50 |      |
-   | \_  /Components [1/2]/                 |           | /20:58/ |       |      |
+   | \_  /Components [1/2]/                 |           | /21:36/ |       |      |
    | \_    Bucket list [0/1]                |           |         |  0:44 |      |
    | \_      Use the damn database already! |           |         |       | 0:44 |
    | \_    Call package managers [1/1]      |           |         | 16:35 |      |
    | \_      Parsing output or interfacing? |           |         |       | 7:50 |
    | \_      To root or not to root         |           |         |       | 0:20 |
    | \_    Shell [0/0]                      |           |         |  0:52 |      |
-   | \_    Config [0/0]                     |           |         |  2:47 |      |
+   | \_    Config [0/0]                     |           |         |  3:25 |      |
    #+END:
 ** Features [2/4]
    :PROPERTIES:
@@ -231,6 +231,7 @@
     :VISIBILITY: children
     :END:
     :LOGBOOK:
+    CLOCK: [2025-04-11 Fr 21:04]--[2025-04-11 Fr 21:07] =>  0:03
     CLOCK: [2025-04-11 Fr 16:30]--[2025-04-11 Fr 16:53] =>  0:23
     CLOCK: [2025-04-11 Fr 16:06]--[2025-04-11 Fr 16:18] =>  0:12
     CLOCK: [2025-04-10 Do 19:15]--[2025-04-10 Do 19:50] =>  0:35
@@ -247,5 +248,5 @@
     - [ ] Automatically say yes?
     - [ ] When removing a package, shall we remove dependencies as well?
     - [X] Automatically refresh the local cache?
-    - [ ] Be nice?
+    - [X] Be nice?
 
