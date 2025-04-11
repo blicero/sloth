@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-08 17:04:38 krylon>
+# Time-stamp: <2025-04-11 16:51:30 krylon>
 #
 # /data/code/python/sloth/pkg.py
 # created on 18. 12. 2023
@@ -26,6 +26,7 @@ from enum import Enum, auto
 from typing import Final, Optional
 
 from sloth import common, probe
+from sloth.config import Config
 
 try:
     import dnf
@@ -68,12 +69,14 @@ class PackageManager(ABC):
         "log",
         "sudo",
         "output",
+        "nice",
     ]
 
     platform: probe.Platform
     log: logging.Logger
     sudo: Optional[str]
     output: tuple[str, str]
+    nice: bool
 
     def __init__(self) -> None:
         self.platform = probe.guess_os()
@@ -88,6 +91,15 @@ class PackageManager(ABC):
                                self.sudo)
             else:
                 self.log.warning("We are not running as root, and neither sudo nor doas was found.")
+
+        self.__process_config()
+
+    def __process_config(self):
+        cfg: Config = Config()
+        try:
+            self.nice = cfg.cfg["shell"]["nice"]
+        except:  # noqa: B001,E722 pylint: disable-msg=W0702
+            self.nice = False
 
     @classmethod
     def create(cls) -> 'PackageManager':

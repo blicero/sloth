@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-10 20:01:57 krylon>
+# Time-stamp: <2025-04-11 16:06:22 krylon>
 #
 # /data/code/python/sloth/config.py
 # created on 08. 04. 2025
@@ -32,6 +32,8 @@ DEFAULT_CONFIG: Final[str] = """# Time-stamp: <2025-04-09 22:02:03 krylon>
 refresh-interval = 86400
 say-yes = true
 remove-dependencies = true
+nice = true
+
 """
 
 
