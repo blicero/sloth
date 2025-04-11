@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-11 16:51:30 krylon>
+# Time-stamp: <2025-04-11 21:05:47 krylon>
 #
 # /data/code/python/sloth/pkg.py
 # created on 18. 12. 2023
@@ -95,7 +95,7 @@ class PackageManager(ABC):
         self.__process_config()
 
     def __process_config(self):
-        cfg: Config = Config()
+        cfg = Config()
         try:
             self.nice = cfg.cfg["shell"]["nice"]
         except:  # noqa: B001,E722 pylint: disable-msg=W0702
@@ -162,6 +162,9 @@ class PackageManager(ABC):
     def _run(self, cmd: list[str], capture: bool = False) -> bool:
         """Execute the given command."""
         cmd = self.pkg_cmd() + cmd
+
+        if self.nice:
+            cmd = ["nice"] + cmd
 
         self.log.debug("Execute %s",
                        " ".join(cmd))
