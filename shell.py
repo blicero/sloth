@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-10 19:12:28 krylon>
+# Time-stamp: <2025-04-11 16:52:52 krylon>
 #
 # /data/code/python/sloth/shell.py
 # created on 01. 04. 2025
@@ -40,13 +40,15 @@ class Shell(Cmd):
         "log",
         "pk",
         "timestamp",
+        "refresh_interval",
+        "auto_yes",
+        "remove_deps",
     ]
 
     db: database.Database
     log: logging.Logger
     pk: pkg.PackageManager
     timestamp: datetime
-    cfg: Config
     refresh_interval: timedelta
     auto_yes: bool
     remove_deps: bool
@@ -64,10 +66,13 @@ class Shell(Cmd):
             pass
         finally:
             atexit.register(readline.write_history_file, common.path.histfile())
-        self.cfg: Config = Config()
-        self.refresh_interval = timedelta(seconds=self.cfg.cfg["shell"]["refresh-interval"])
-        self.auto_yes = self.cfg.cfg["shell"]["say-yes"]
-        self.remove_deps = self.cfg.cfg["shell"]["remove-dependencies"]
+        self.__process_config()
+
+    def __process_config(self):
+        cfg = Config()
+        self.refresh_interval = timedelta(seconds=cfg.cfg["shell"]["refresh-interval"])
+        self.auto_yes = cfg.cfg["shell"]["say-yes"]
+        self.remove_deps = cfg.cfg["shell"]["remove-dependencies"]
 
     def precmd(self, line) -> str:
         """Save the time before executing the command."""
