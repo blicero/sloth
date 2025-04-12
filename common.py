@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-11 22:20:04 krylon>
+# Time-stamp: <2025-04-12 17:08:19 krylon>
 #
 # /data/code/python/sloth/common.py
 # created on 14. 12. 2023
@@ -80,8 +80,8 @@ def set_basedir(folder: str) -> None:
 
 def init_app() -> None:
     """Initialize the application environment"""
-    print(f"Create base directory {path.base()}")
     if not os.path.isdir(path.base()):
+        print(f"Create base directory {path.base()}")
         os.mkdir(path.base())
 
 
