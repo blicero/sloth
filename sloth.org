@@ -1,5 +1,5 @@
 # -*- mode: org; fill-column: 78; -*-
-# Time-stamp: <2025-04-12 16:41:55 krylon>
+# Time-stamp: <2025-04-12 19:42:08 krylon>
 #
 #+TAGS: internals(i) ui(u) bug(b) feature(f)
 #+TAGS: database(d) design(e), meditation(m)
@@ -8,7 +8,7 @@
 #+TODO: MEDITATE(m) PLANNING(p) | SUSPENDED(s)
 #+PRIORITIES: A G D
 
-* Sloth [8/13]
+* Sloth [9/13]
   :PROPERTIES:
   :COOKIE_DATA: todo recursive
   :VISIBILITY: children
@@ -22,13 +22,13 @@
   deploying a given configuration to several machines.
 ** Clocktable
    #+BEGIN: clocktable :scope file :maxlevel 202 :emphasize t
-   #+CAPTION: Clock summary at [2025-04-12 Sa 16:41]
+   #+CAPTION: Clock summary at [2025-04-12 Sa 19:42]
    | Headline                               | Time      |         |       |      |
    |----------------------------------------+-----------+---------+-------+------|
    | *Total time*                           | *1d 2:55* |         |       |      |
    |----------------------------------------+-----------+---------+-------+------|
-   | *Sloth [8/13]*                         | *1d 2:55* |         |       |      |
-   | \_  /Features [2/4]/                   |           | /0:32/  |       |      |
+   | *Sloth [9/13]*                         | *1d 2:55* |         |       |      |
+   | \_  /Features [3/4]/                   |           | /0:32/  |       |      |
    | \_    Fused refresh-upgrade            |           |         |  0:04 |      |
    | \_    Automatically say yes            |           |         |  0:28 |      |
    | \_  /Platforms [4/7]/                  |           | /4:47/  |       |      |
@@ -44,7 +44,7 @@
    | \_    Shell [0/0]                      |           |         |  0:52 |      |
    | \_    Config [0/0]                     |           |         |  3:25 |      |
    #+END:
-** Features [2/4]
+** Features [3/4]
    :PROPERTIES:
    :COOKIE_DATA: todo recursive
    :VISIBILITY: children
@@ -64,7 +64,8 @@
     Others, notably APT, don't, I would like to automatically check the age of
     the local cache and prompt the user if they want a refresh when performing
     an operation.
-*** TODO [#E] Automatically say yes
+*** DONE [#E] Automatically say yes
+    CLOSED: [2025-04-12 Sa 19:41]
     :LOGBOOK:
     CLOCK: [2025-04-12 Sa 16:13]--[2025-04-12 Sa 16:41] =>  0:28
     :END:
