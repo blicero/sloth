@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-11 21:05:47 krylon>
+# Time-stamp: <2025-04-12 16:40:08 krylon>
 #
 # /data/code/python/sloth/pkg.py
 # created on 18. 12. 2023
@@ -70,6 +70,7 @@ class PackageManager(ABC):
         "sudo",
         "output",
         "nice",
+        "yes",
     ]
 
     platform: probe.Platform
@@ -77,6 +78,7 @@ class PackageManager(ABC):
     sudo: Optional[str]
     output: tuple[str, str]
     nice: bool
+    yes: bool
 
     def __init__(self) -> None:
         self.platform = probe.guess_os()
@@ -98,8 +100,10 @@ class PackageManager(ABC):
         cfg = Config()
         try:
             self.nice = cfg.cfg["shell"]["nice"]
+            self.yes = cfg.cfg["shell"]["say-yes"]
         except:  # noqa: B001,E722 pylint: disable-msg=W0702
             self.nice = False
+            self.yes = False
 
     @classmethod
     def create(cls) -> 'PackageManager':
@@ -212,7 +216,7 @@ class APT(PackageManager):
     def upgrade(self, **kwargs) -> None:
         """Install any pending updates."""
         cmd = ["full-upgrade"]
-        if "yes" in kwargs:
+        if self.yes or "yes" in kwargs:
             cmd.append("-y")
         self._run(cmd)
 
@@ -222,6 +226,8 @@ class APT(PackageManager):
         self.log.debug("Install %s",
                        ", ".join(args))
         cmd = ["install"]
+        if self.yes:
+            cmd.append("-y")
         cmd.extend(args)
         self._run(cmd)
 
@@ -230,6 +236,8 @@ class APT(PackageManager):
         assert len(args) > 0
         self.log.debug("Remove %s", BLANK.join(args))
         cmd = ["remove"]
+        if self.yes:
+            cmd.append("-y")
         cmd.extend(args)
         self._run(cmd)
 
@@ -240,6 +248,8 @@ class APT(PackageManager):
             cmd = ["autopurge"]
         else:
             cmd = ["autoremove"]
+        if self.yes:
+            cmd.append("-y")
         self._run(cmd)
 
     def cleanup(self, *args, **kwargs) -> None:
@@ -306,6 +316,8 @@ class Zypper(PackageManager):
     def upgrade(self, **kwargs) -> None:
         """Install any pending updates."""
         cmd: list[str] = ["dup"] if self.platform.name == "opensuse-tumbleweed" else ["up"]
+        if self.yes:
+            cmd.append("-y")
         self._run(cmd)
 
     def install(self, *args, **kwargs) -> None:
@@ -313,12 +325,16 @@ class Zypper(PackageManager):
         self.log.debug("Install %s",
                        ", ".join(args))
         cmd = ["install"]
+        if self.yes:
+            cmd.append("-y")
         cmd.extend(args)
         self._run(cmd)
 
     def remove(self, *args, **kwargs) -> None:
         """Remove one or more packages."""
         cmd = ["rm", "-u"]
+        if self.yes:
+            cmd.append("-y")
         cmd.extend(args)
         self._run(cmd)
 
@@ -458,22 +474,31 @@ class DNF(PackageManager):
     def upgrade(self, **kwargs) -> None:
         """Install available updates."""
         cmd = ["upgrade"]
+        if self.yes:
+            cmd.append("-y")
         self._run(cmd)
 
     def install(self, *args, **kwargs) -> None:
         """Install packages"""
-        cmd = ["install"] + list(args)
+        cmd = ["install"]
+        if self.yes:
+            cmd.append("-y")
+        cmd.extend(args)
         self._run(cmd)
 
     def remove(self, *args, **kwargs) -> None:
         """Remove one or more packages."""
         cmd = ["remove"]
+        if self.yes:
+            cmd.append("-y")
         cmd.extend(args)
         self._run(cmd)
 
     def autoremove(self, *args, **kwargs) -> None:
         """Remove unneeded packages."""
         cmd = ["autoremove"]
+        if self.yes:
+            cmd.append("-y")
         self._run(cmd)
 
     def cleanup(self, *args, **kwargs) -> None:
