@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-12 16:40:08 krylon>
+# Time-stamp: <2025-04-13 16:42:29 krylon>
 #
 # /data/code/python/sloth/pkg.py
 # created on 18. 12. 2023
@@ -48,6 +48,7 @@ class Operation(Enum):
     UpgradeRelease = auto()
     Cleanup = auto()
     Autoremove = auto()
+    Audit = auto()
 
 
 @dataclass(slots=True, kw_only=True)
@@ -159,6 +160,10 @@ class PackageManager(ABC):
     def cleanup(self, *args, **kwargs) -> None:
         """Clean up downloaded packages."""
 
+    @abstractmethod
+    def audit(self, *args, **kwargs) -> list[Package]:
+        """Audit installed packages for known vulnerabilities."""
+
     def is_root(self) -> bool:
         """Return true if we are running with root privileges."""
         return os.geteuid() == 0
@@ -170,8 +175,13 @@ class PackageManager(ABC):
         if self.nice:
             cmd = ["nice"] + cmd
 
-        self.log.debug("Execute %s",
-                       " ".join(cmd))
+        try:
+            self.log.debug("Execute %s",
+                           " ".join(cmd))
+        except TypeError as err:
+            self.log.error("TypeError: %s\n%s\n",
+                           err,
+                           cmd)
 
         proc = subprocess.run(cmd,
                               capture_output=capture,
@@ -256,6 +266,12 @@ class APT(PackageManager):
         """Clean up downloaded packages."""
         cmd = ["clean"]
         self._run(cmd)
+
+    def audit(self, *args, **kwargs) -> list[Package]:
+        """Audit installed packages for known vulnerabilities."""
+        # We *could* configure a 3rd-party audit tool like lynis...
+        print("Audit on Debian is not implemented, yet.")
+        return []
 
     def search(self, *args, **kwargs) -> list[Package]:
         """Search for available packages."""
@@ -347,6 +363,12 @@ class Zypper(PackageManager):
         cmd = ["clean", "--all"]
         self._run(cmd)
 
+    def audit(self, *args, **kwargs) -> list[Package]:
+        """Audit installed packages for known vulnerabilities."""
+        # We *could* configure a 3rd-party audit tool like lynis...
+        print("Audit on openSUSE is not implemented, yet.")
+        return []
+
     def search(self, *args, **kwargs) -> list[Package]:
         """Search the package database."""
         self.log.debug("Search %s", BLANK.join(args))
@@ -423,6 +445,12 @@ class Pacman(PackageManager):
         """Clean up downloaded packages."""
         cmd = ["-Scc"]
         self._run(cmd)
+
+    def audit(self, *args, **kwargs) -> list[Package]:
+        """Audit installed packages for known vulnerabilities."""
+        # We *could* configure a 3rd-party audit tool like lynis...
+        print("Audit on Arch is not implemented, yet.")
+        return []
 
     def search(self, *args, **kwargs) -> list[Package]:
         """Search for available packages"""
@@ -506,6 +534,18 @@ class DNF(PackageManager):
         cmd = ["clean"]
         self._run(cmd)
 
+    def audit(self, *args, **kwargs) -> list[Package]:
+        """Audit installed packages for known vulnerabilities."""
+        # Output of "dnf advisory list":
+        # Aktualisiere und lade Paketquellen:
+        # Paketquellen geladen.
+        # Name                   Type        Severity                                     Package              Issued
+        # FEDORA-2025-811269fb5f enhancement None                    libsolv-0.7.32-4.fc41.x86_64 2025-04-05 02:45:00
+        # FEDORA-2025-c6d8815d3a bugfix      Moderate          selinux-policy-41.36-1.fc41.noarch 2025-04-09 01:25:12
+        # FEDORA-2025-c6d8815d3a bugfix      Moderate selinux-policy-targeted-41.36-1.fc41.noarch 2025-04-09 01:25:12
+        print("Audit on Fedora / RHEL is not implemented, yet.")
+        return []
+
     def search(self, *args, **kwargs) -> list[Package]:
         """Search the package database"""
         self.log.debug("Searching for %s", BLANK.join(args))
@@ -570,6 +610,12 @@ class FreeBSD(PackageManager):
         """Clean up downloaded packages."""
         cmd = ["clean"]
         self._run(cmd)
+
+    def audit(self, *args, **kwargs) -> list[Package]:
+        """Audit installed packages for known vulnerabilities."""
+        # pkg audit -Rjson will print the result in JSON.
+        print("Audit on FreeBSD is not implemented, yet.")
+        return []
 
     def search(self, *args, **kwargs) -> list[Package]:
         """Search for available packages."""
