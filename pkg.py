@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-13 16:42:29 krylon>
+# Time-stamp: <2025-04-13 19:42:45 krylon>
 #
 # /data/code/python/sloth/pkg.py
 # created on 18. 12. 2023
@@ -536,14 +536,18 @@ class DNF(PackageManager):
 
     def audit(self, *args, **kwargs) -> list[Package]:
         """Audit installed packages for known vulnerabilities."""
-        # Output of "dnf advisory list":
+        # Output of "dnf advisory list --updates":
         # Aktualisiere und lade Paketquellen:
         # Paketquellen geladen.
         # Name                   Type        Severity                                     Package              Issued
         # FEDORA-2025-811269fb5f enhancement None                    libsolv-0.7.32-4.fc41.x86_64 2025-04-05 02:45:00
         # FEDORA-2025-c6d8815d3a bugfix      Moderate          selinux-policy-41.36-1.fc41.noarch 2025-04-09 01:25:12
         # FEDORA-2025-c6d8815d3a bugfix      Moderate selinux-policy-targeted-41.36-1.fc41.noarch 2025-04-09 01:25:12
-        print("Audit on Fedora / RHEL is not implemented, yet.")
+        if self.platform.name == "fedora":
+            cmd = ["advisory", "list", "--updates"]
+            self._run(cmd)
+        else:
+            print("Audit on Fedora / RHEL is not implemented, yet.")
         return []
 
     def search(self, *args, **kwargs) -> list[Package]:
@@ -614,7 +618,8 @@ class FreeBSD(PackageManager):
     def audit(self, *args, **kwargs) -> list[Package]:
         """Audit installed packages for known vulnerabilities."""
         # pkg audit -Rjson will print the result in JSON.
-        print("Audit on FreeBSD is not implemented, yet.")
+        cmd = ["audit", "-F"]
+        self._run(cmd)
         return []
 
     def search(self, *args, **kwargs) -> list[Package]:
@@ -637,6 +642,7 @@ class FreeBSD(PackageManager):
                 results.append(p)
 
         return results
+
 
 # Local Variables: #
 # python-indent: 4 #
