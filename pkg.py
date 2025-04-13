@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-13 19:42:45 krylon>
+# Time-stamp: <2025-04-13 19:52:00 krylon>
 #
 # /data/code/python/sloth/pkg.py
 # created on 18. 12. 2023
@@ -531,7 +531,7 @@ class DNF(PackageManager):
 
     def cleanup(self, *args, **kwargs) -> None:
         """Clean up downloaded packages."""
-        cmd = ["clean"]
+        cmd = ["clean all"]
         self._run(cmd)
 
     def audit(self, *args, **kwargs) -> list[Package]:
