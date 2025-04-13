@@ -1,5 +1,5 @@
 # -*- mode: org; fill-column: 78; -*-
-# Time-stamp: <2025-04-13 16:56:29 krylon>
+# Time-stamp: <2025-04-13 19:39:28 krylon>
 #
 #+TAGS: internals(i) ui(u) bug(b) feature(f)
 #+TAGS: database(d) design(e), meditation(m)
@@ -22,16 +22,16 @@
   deploying a given configuration to several machines.
 ** Clocktable
    #+BEGIN: clocktable :scope file :maxlevel 202 :emphasize t
-   #+CAPTION: Clock summary at [2025-04-13 So 16:56]
+   #+CAPTION: Clock summary at [2025-04-13 So 19:39]
    | Headline                               | Time      |         |       |      |
    |----------------------------------------+-----------+---------+-------+------|
-   | *Total time*                           | *1d 5:49* |         |       |      |
+   | *Total time*                           | *1d 7:26* |         |       |      |
    |----------------------------------------+-----------+---------+-------+------|
-   | *Sloth [9/13]*                         | *1d 5:49* |         |       |      |
-   | \_  /Features [3/4]/                   |           | /3:26/  |       |      |
+   | *Sloth [9/13]*                         | *1d 7:26* |         |       |      |
+   | \_  /Features [3/4]/                   |           | /5:03/  |       |      |
    | \_    Fused refresh-upgrade            |           |         |  0:04 |      |
    | \_    Automatically say yes            |           |         |  0:28 |      |
-   | \_    Audit                            |           |         |  2:54 |      |
+   | \_    Audit                            |           |         |  4:31 |      |
    | \_  /Platforms [4/7]/                  |           | /4:47/  |       |      |
    | \_    Arch                             |           |         |  0:31 |      |
    | \_    Fedora / RHEL                    |           |         |  2:26 |      |
@@ -73,6 +73,7 @@
     Would be nice if I could make this a configurable option!
 *** TODO Audit
     :LOGBOOK:
+    CLOCK: [2025-04-13 So 18:02]--[2025-04-13 So 19:39] =>  1:37
     CLOCK: [2025-04-13 So 14:02]--[2025-04-13 So 16:56] =>  2:54
     :END:
     Some package managers (dnf, pkg on FreeBSD) can check the installed
