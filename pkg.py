@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-13 19:52:00 krylon>
+# Time-stamp: <2025-04-13 21:28:41 krylon>
 #
 # /data/code/python/sloth/pkg.py
 # created on 18. 12. 2023
@@ -642,6 +642,10 @@ class FreeBSD(PackageManager):
                 results.append(p)
 
         return results
+
+
+class OpenBSD(PackageManager):
+    """OpenBSD provides support for OpenBSD's pkg_* package management."""
 
 
 # Local Variables: #
