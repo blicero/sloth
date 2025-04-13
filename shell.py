@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-11 16:52:52 krylon>
+# Time-stamp: <2025-04-13 19:48:45 krylon>
 #
 # /data/code/python/sloth/shell.py
 # created on 01. 04. 2025
@@ -164,13 +164,20 @@ class Shell(Cmd):
             self.db.op_add(Operation.Autoremove, "", 0)
         return False
 
-    def clean(self, _arg: str) -> bool:
+    def do_clean(self, _arg: str) -> bool:
         """Clean the package cache."""
         self.log.info("Clean local package cache.")
         with self.db:
             self.pk.cleanup()
             self.db.op_add(Operation.Cleanup, "", 0)
         return False
+
+    def do_audit(self, _arg: str) -> bool:
+        """Audit installed packages for known vulnerabilities. Not supported on all platforms."""
+        self.log.info("Perform audit")
+        with self.db:
+            self.pk.audit()
+            self.db.op_add(Operation.Audit, "", 0)
 
     def do_EOF(self, _) -> bool:
         """Handle EOF (by quitting)."""
