@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-13 19:48:45 krylon>
+# Time-stamp: <2025-04-14 21:49:31 krylon>
 #
 # /data/code/python/sloth/shell.py
 # created on 01. 04. 2025
@@ -178,6 +178,7 @@ class Shell(Cmd):
         with self.db:
             self.pk.audit()
             self.db.op_add(Operation.Audit, "", 0)
+        return False
 
     def do_EOF(self, _) -> bool:
         """Handle EOF (by quitting)."""
