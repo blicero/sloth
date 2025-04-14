@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-13 21:28:41 krylon>
+# Time-stamp: <2025-04-14 17:08:39 krylon>
 #
 # /data/code/python/sloth/pkg.py
 # created on 18. 12. 2023
@@ -125,7 +125,7 @@ class PackageManager(ABC):
                 raise RuntimeError(f"Unsupported platform: {system[0]}")
 
     @abstractmethod
-    def pkg_cmd(self) -> list[str]:
+    def pkg_cmd(self, op: Optional[Operation] = None) -> list[str]:
         """Return the command to execute the package manager."""
 
     @abstractmethod
@@ -212,7 +212,7 @@ aptPat: Final[re.Pattern] = re.compile(r"""
 class APT(PackageManager):
     """APT is a frontend for the APT package manager used on Debian and derivatives."""
 
-    def pkg_cmd(self) -> list[str]:
+    def pkg_cmd(self, _op: Optional[Operation] = None) -> list[str]:
         """Return the command to execute the package manager."""
         if self.sudo is not None:
             return [self.sudo, "apt"]
@@ -314,7 +314,7 @@ zyppPat: Final[re.Pattern] = re.compile(r"^ ([^-|\n]+) \| \s+ (\S+) \s+ \| \s+ (
 class Zypper(PackageManager):
     """Zypper is the package manager used by openSUSE."""
 
-    def pkg_cmd(self) -> list[str]:
+    def pkg_cmd(self, _op: Optional[Operation] = None) -> list[str]:
         """Return the command to execute the package manager."""
         cmd: list[str] = [] if self.sudo is None else [self.sudo]
         cmd.append("zypper")
@@ -409,7 +409,7 @@ pacPat: Final[re.Pattern] = re.compile(r"""
 class Pacman(PackageManager):
     """Pacman is a frontend to Arch Linux' pacman"""
 
-    def pkg_cmd(self) -> list[str]:
+    def pkg_cmd(self, _op: Optional[Operation] = None) -> list[str]:
         """Return the command to execute the package manager."""
         if self.sudo:
             return [self.sudo, "pacman"]
@@ -486,7 +486,7 @@ class Pacman(PackageManager):
 class DNF(PackageManager):
     """DNF is the package manager on RHEL, Fedora, and their offspring."""
 
-    def pkg_cmd(self) -> list[str]:
+    def pkg_cmd(self, _op: Optional[Operation] = None) -> list[str]:
         """Return the command to execute the package manager."""
         if self.sudo:
             return [self.sudo, "dnf"]
@@ -578,7 +578,7 @@ pkgPat: Final[re.Pattern] = re.compile(r"""^([-_a-zA-Z0-9]+?)-(\d\S+)\s+(.*)""",
 class FreeBSD(PackageManager):
     """FreeBSD provides support for the FreeBSD operating system (hence the name)."""
 
-    def pkg_cmd(self) -> list[str]:
+    def pkg_cmd(self, _op: Optional[Operation] = None) -> list[str]:
         """Return the path to the package manager."""
         if self.sudo is not None:
             return [self.sudo, "/usr/sbin/pkg"]
@@ -646,6 +646,38 @@ class FreeBSD(PackageManager):
 
 class OpenBSD(PackageManager):
     """OpenBSD provides support for OpenBSD's pkg_* package management."""
+
+    def _cmd(self, op: Operation) -> str:
+        """Return the appropriate command for the operation."""
+        match op:
+            case Operation.Install:
+                return "/usr/sbin/pkg_add"
+            case Operation.Delete:
+                return "/usr/sbin/pkg_del"
+            case Operation.Refresh:
+                return ""
+            case Operation.Upgrade | Operation.UpgradeBig | Operation.UpgradeRelease:
+                return "/usr/sbin/pkg_add"
+            case Operation.Autoremove:
+                return "/usr/sbin/pkg_del"
+            case _:
+                raise ValueError(f"Unsupported operation: {op}")
+
+    def pkg_cmd(self, op: Optional[Operation] = None) -> list[str]:
+        """Return the path to the package manager."""
+        if op is None:
+            raise ValueError("Operation is a required argument on OpenBSD.")
+        cmd = self._cmd(op)
+        if self.sudo is not None:
+            return [self.sudo, cmd]
+        return [cmd]
+
+    def refresh(self, **kwargs) -> None:
+        """Update the local package cache."""
+        self.log.info("Refresh is a no-op on OpenBSD.")
+
+    def upgrade(self, **kwargs) -> None:
+        """Install available updates."""
 
 
 # Local Variables: #
