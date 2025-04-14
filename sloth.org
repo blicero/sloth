@@ -1,5 +1,5 @@
 # -*- mode: org; fill-column: 78; -*-
-# Time-stamp: <2025-04-14 00:03:49 krylon>
+# Time-stamp: <2025-04-14 21:48:41 krylon>
 #
 #+TAGS: internals(i) ui(u) bug(b) feature(f)
 #+TAGS: database(d) design(e), meditation(m)
@@ -8,7 +8,7 @@
 #+TODO: MEDITATE(m) PLANNING(p) | SUSPENDED(s)
 #+PRIORITIES: A G D
 
-* Sloth [9/13]
+* Sloth [10/13]
   :PROPERTIES:
   :COOKIE_DATA: todo recursive
   :VISIBILITY: children
@@ -22,21 +22,21 @@
   deploying a given configuration to several machines.
 ** Clocktable
    #+BEGIN: clocktable :scope file :maxlevel 202 :emphasize t
-   #+CAPTION: Clock summary at [2025-04-14 Mo 00:03]
+   #+CAPTION: Clock summary at [2025-04-14 Mo 21:48]
    | Headline                               | Time       |         |       |      |
    |----------------------------------------+------------+---------+-------+------|
-   | *Total time*                           | *1d 10:06* |         |       |      |
+   | *Total time*                           | *1d 10:25* |         |       |      |
    |----------------------------------------+------------+---------+-------+------|
-   | *Sloth [9/13]*                         | *1d 10:06* |         |       |      |
+   | *Sloth [10/13]*                        | *1d 10:25* |         |       |      |
    | \_  /Features [3/4]/                   |            | /5:03/  |       |      |
    | \_    Fused refresh-upgrade            |            |         |  0:04 |      |
    | \_    Automatically say yes            |            |         |  0:28 |      |
    | \_    Audit                            |            |         |  4:31 |      |
-   | \_  /Platforms [5/7]/                  |            | /7:27/  |       |      |
+   | \_  /Platforms [5/7]/                  |            | /7:46/  |       |      |
    | \_    Arch                             |            |         |  0:31 |      |
    | \_    Fedora / RHEL                    |            |         |  2:26 |      |
    | \_    FreeBSD [0/0]                    |            |         |  1:50 |      |
-   | \_    OpenBSD                          |            |         |  2:40 |      |
+   | \_    OpenBSD                          |            |         |  2:59 |      |
    | \_  /Components [2/2]/                 |            | /21:36/ |       |      |
    | \_    Bucket list [1/1]                |            |         |  0:44 |      |
    | \_      Use the damn database already! |            |         |       | 0:44 |
@@ -142,6 +142,7 @@
 **** jails
 *** TODO OpenBSD
     :LOGBOOK:
+    CLOCK: [2025-04-14 Mo 16:49]--[2025-04-14 Mo 17:08] =>  0:19
     CLOCK: [2025-04-13 So 21:23]--[2025-04-14 Mo 00:03] =>  2:40
     :END:
     I run OpenBSD on an old laptop and in a virtual machine.
@@ -266,7 +267,7 @@
     particular reason against it.
     What settings do I want to support?
     - [X] Interval to refresh the local package cache
-    - [ ] Automatically say yes?
+    - [X] Automatically say yes?
     - [ ] When removing a package, shall we remove dependencies as well?
     - [X] Automatically refresh the local cache?
     - [X] Be nice?
