@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-15 15:29:24 krylon>
+# Time-stamp: <2025-04-15 20:53:21 krylon>
 #
 # /data/code/python/sloth/pkg.py
 # created on 18. 12. 2023
@@ -173,13 +173,12 @@ class PackageManager(ABC):
 
     def _run(self, cmd: list[str], capture: bool = False, **kwargs) -> bool:
         """Execute the given command."""
-        args = cmd
+        prefix: list[str] = []
         if "op" in kwargs:
-            cmd = self.pkg_cmd(kwargs["op"])
+            prefix = self.pkg_cmd(kwargs["op"])
         else:
-            cmd = self.pkg_cmd()
-        args.extend(cmd)
-        cmd = args
+            prefix = self.pkg_cmd()
+        cmd = prefix + cmd
 
         if self.nice:
             cmd = ["nice"] + cmd
