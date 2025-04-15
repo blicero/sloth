@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-14 17:08:39 krylon>
+# Time-stamp: <2025-04-15 14:52:48 krylon>
 #
 # /data/code/python/sloth/pkg.py
 # created on 18. 12. 2023
@@ -121,6 +121,8 @@ class PackageManager(ABC):
                 return DNF()
             case "freebsd":
                 return FreeBSD()
+            case "openbsd":
+                return OpenBSD()
             case _:
                 raise RuntimeError(f"Unsupported platform: {system[0]}")
 
@@ -168,9 +170,12 @@ class PackageManager(ABC):
         """Return true if we are running with root privileges."""
         return os.geteuid() == 0
 
-    def _run(self, cmd: list[str], capture: bool = False) -> bool:
+    def _run(self, cmd: list[str], capture: bool = False, **kwargs) -> bool:
         """Execute the given command."""
-        cmd = self.pkg_cmd() + cmd
+        if "op" in kwargs:
+            cmd = self.pkg_cmd(kwargs["op"]) + cmd
+        else:
+            cmd = self.pkg_cmd() + cmd
 
         if self.nice:
             cmd = ["nice"] + cmd
@@ -678,7 +683,54 @@ class OpenBSD(PackageManager):
 
     def upgrade(self, **kwargs) -> None:
         """Install available updates."""
+        cmd = ["-u"]
+        self._run(cmd, op=Operation.Upgrade)
 
+    def install(self, *args, **kwargs) -> None:
+        """Install one or more packages."""
+        assert len(args) > 0
+        argstr: Final[str] = BLANK.join(args)
+        self.log.debug("Install %s",
+                       argstr)
+        with self.db:
+            self._run(args, op=Operation.Install)
+            self.db.op_add(Operation.Install, argstr, 0)
+
+    def remove(self, *args, **kwargs) -> None:
+        """Remove one or more packages."""
+        assert len(args) > 0
+        argstr: Final[str] = BLANK.join(args)
+        self.log.debug("Uninstall %s",
+                       argstr)
+        with self.db:
+            self._run(args, op=Operation.Remove)
+            self.db.op_add(Operation.Remove, argstr, 0)
+
+    def autoremove(self, *args, **kwargs) -> None:
+        """Remove unneeded packages."""
+        self.log.debug("Remove unneeded packages.")
+        with self.db:
+            self._run(["-a"], op=Operation.Autoremove)
+            self.db.op_add(Operation.Autoremove, "", 0)
+
+    def cleanup(self, *args, **kwargs) -> None:
+        """Clean up downloaded package files."""
+        self.log.debug("Cleanup is not implemented on OpenBSD.")
+
+    def audit(self, *args, **kwargs) -> list[Package]:
+        """Audit installed packages for known vulnerabilities."""
+        # We *could* configure a 3rd-party audit tool like lynis...
+        print("Audit on OpenBSD is not implemented, yet.")
+        return []
+
+    def search(self, *args, **kwargs) -> list[Package]:
+        """Search for available packages."""
+        assert len(args) > 0
+        argstr: Final[str] = BLANK.join(args)
+        self.log.debug("Search for %s", argstr)
+        cmd = ["-Q"] + args
+        self._run(cmd, True, op=Operation.Search)
+        return []
 
 # Local Variables: #
 # python-indent: 4 #

@@ -1,0 +1,13 @@
+debug-emacs-29.4p0-gtk2
+debug-emacs-29.4p0-gtk3
+debug-emacs-29.4p0-no_x11
+emacs-29.4p0-gtk2
+emacs-29.4p0-gtk3
+emacs-29.4p0-no_x11 (installed)
+emacs-anthy-9100hp9
+notmuch-emacs-0.38.3p0
+uemacs-4.0p2
+xemacs-21.4.22p37
+xemacs-21.4.22p37-mule
+xemacs-sumo-21.20100727p1
+xemacs-sumo-21.20100727p1-mule
