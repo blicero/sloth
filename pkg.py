@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-15 14:52:48 krylon>
+# Time-stamp: <2025-04-15 15:29:24 krylon>
 #
 # /data/code/python/sloth/pkg.py
 # created on 18. 12. 2023
@@ -49,6 +49,7 @@ class Operation(Enum):
     Cleanup = auto()
     Autoremove = auto()
     Audit = auto()
+    Search = auto()
 
 
 @dataclass(slots=True, kw_only=True)
@@ -172,10 +173,13 @@ class PackageManager(ABC):
 
     def _run(self, cmd: list[str], capture: bool = False, **kwargs) -> bool:
         """Execute the given command."""
+        args = cmd
         if "op" in kwargs:
-            cmd = self.pkg_cmd(kwargs["op"]) + cmd
+            cmd = self.pkg_cmd(kwargs["op"])
         else:
-            cmd = self.pkg_cmd() + cmd
+            cmd = self.pkg_cmd()
+        args.extend(cmd)
+        cmd = args
 
         if self.nice:
             cmd = ["nice"] + cmd
@@ -663,8 +667,10 @@ class OpenBSD(PackageManager):
                 return ""
             case Operation.Upgrade | Operation.UpgradeBig | Operation.UpgradeRelease:
                 return "/usr/sbin/pkg_add"
-            case Operation.Autoremove:
+            case Operation.Autoremove | Operation.Delete:
                 return "/usr/sbin/pkg_del"
+            case Operation.Search:
+                return "/usr/sbin/pkg_info"
             case _:
                 raise ValueError(f"Unsupported operation: {op}")
 
@@ -692,9 +698,7 @@ class OpenBSD(PackageManager):
         argstr: Final[str] = BLANK.join(args)
         self.log.debug("Install %s",
                        argstr)
-        with self.db:
-            self._run(args, op=Operation.Install)
-            self.db.op_add(Operation.Install, argstr, 0)
+        self._run(list(args), op=Operation.Install)
 
     def remove(self, *args, **kwargs) -> None:
         """Remove one or more packages."""
@@ -702,16 +706,12 @@ class OpenBSD(PackageManager):
         argstr: Final[str] = BLANK.join(args)
         self.log.debug("Uninstall %s",
                        argstr)
-        with self.db:
-            self._run(args, op=Operation.Remove)
-            self.db.op_add(Operation.Remove, argstr, 0)
+        self._run(list(args), op=Operation.Delete)
 
     def autoremove(self, *args, **kwargs) -> None:
         """Remove unneeded packages."""
         self.log.debug("Remove unneeded packages.")
-        with self.db:
-            self._run(["-a"], op=Operation.Autoremove)
-            self.db.op_add(Operation.Autoremove, "", 0)
+        self._run(["-a"], op=Operation.Autoremove)
 
     def cleanup(self, *args, **kwargs) -> None:
         """Clean up downloaded package files."""
@@ -728,7 +728,8 @@ class OpenBSD(PackageManager):
         assert len(args) > 0
         argstr: Final[str] = BLANK.join(args)
         self.log.debug("Search for %s", argstr)
-        cmd = ["-Q"] + args
+        cmd = ["-Q"]
+        cmd.extend(args)
         self._run(cmd, True, op=Operation.Search)
         return []
 
