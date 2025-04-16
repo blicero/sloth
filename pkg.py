@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-15 20:53:21 krylon>
+# Time-stamp: <2025-04-16 20:06:08 krylon>
 #
 # /data/code/python/sloth/pkg.py
 # created on 18. 12. 2023
@@ -652,6 +652,25 @@ class FreeBSD(PackageManager):
         return results
 
 
+# Sample output of pkg_info -Q emacs on OpenBSD 7.6
+# debug-emacs-29.4p0-gtk2
+# debug-emacs-29.4p0-gtk3
+# debug-emacs-29.4p0-no_x11
+# emacs-29.4p0-gtk2
+# emacs-29.4p0-gtk3
+# emacs-29.4p0-no_x11 (installed)
+# emacs-anthy-9100hp9
+# notmuch-emacs-0.38.3p0
+# uemacs-4.0p2
+# xemacs-21.4.22p37
+# xemacs-21.4.22p37-mule
+# xemacs-sumo-21.20100727p1
+# xemacs-sumo-21.20100727p1-mule
+
+openBSDPat: Final[re.Pattern] = re.compile(r"^([-\w]+?)-(\d\S+)(?:\s+\((installed)\))?$",
+                                           re.I | re.X | re.M)
+
+
 class OpenBSD(PackageManager):
     """OpenBSD provides support for OpenBSD's pkg_* package management."""
 
@@ -730,7 +749,24 @@ class OpenBSD(PackageManager):
         cmd = ["-Q"]
         cmd.extend(args)
         self._run(cmd, True, op=Operation.Search)
-        return []
+
+        packages: list[Package] = []
+        m = openBSDPat.findall(self.output[0])
+        if len(m) == 0:
+            self.log.error("Cannot parse output of pkg_info:\n%s\n\n%s\n\n\n",
+                           self.output[0],
+                           self.output[1])
+        else:
+            for group in m:
+                info: str = "i" if group[3] == "installed" else ""
+                p: Package = Package(name=group[0],
+                                     desc="",
+                                     kind="",
+                                     info=info,
+                                     version=group[2])
+                packages.append(p)
+
+        return packages
 
 # Local Variables: #
 # python-indent: 4 #
