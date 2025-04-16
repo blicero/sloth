@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-16 20:06:08 krylon>
+# Time-stamp: <2025-04-16 20:11:10 krylon>
 #
 # /data/code/python/sloth/pkg.py
 # created on 18. 12. 2023
@@ -758,12 +758,15 @@ class OpenBSD(PackageManager):
                            self.output[1])
         else:
             for group in m:
-                info: str = "i" if group[3] == "installed" else ""
+                info: str = ""
+                if len(group) == 3:
+                    info = "i" if group[2] == "installed" else ""
+
                 p: Package = Package(name=group[0],
                                      desc="",
                                      kind="",
                                      info=info,
-                                     version=group[2])
+                                     version=group[1])
                 packages.append(p)
 
         return packages
