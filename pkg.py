@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-16 20:11:10 krylon>
+# Time-stamp: <2025-04-17 21:20:42 krylon>
 #
 # /data/code/python/sloth/pkg.py
 # created on 18. 12. 2023
@@ -677,14 +677,12 @@ class OpenBSD(PackageManager):
     def _cmd(self, op: Operation) -> str:
         """Return the appropriate command for the operation."""
         match op:
-            case Operation.Install:
+            case Operation.Install | Operation.Upgrade | Operation.UpgradeBig | Operation.UpgradeRelease:
                 return "/usr/sbin/pkg_add"
             case Operation.Delete:
-                return "/usr/sbin/pkg_del"
+                return "/usr/sbin/pkg_delete"
             case Operation.Refresh:
                 return ""
-            case Operation.Upgrade | Operation.UpgradeBig | Operation.UpgradeRelease:
-                return "/usr/sbin/pkg_add"
             case Operation.Autoremove | Operation.Delete:
                 return "/usr/sbin/pkg_del"
             case Operation.Search:
