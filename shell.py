@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-14 21:49:31 krylon>
+# Time-stamp: <2025-04-17 19:16:05 krylon>
 #
 # /data/code/python/sloth/shell.py
 # created on 01. 04. 2025
@@ -197,8 +197,9 @@ def pkg_fancy(p: Package) -> HTML:
 
 
 if __name__ == '__main__':
+    intro: str = f"{common.APP_NAME} {common.APP_VERSION} (c) 2025 Benjamin Walkenhorst"
     sh = Shell()
-    sh.cmdloop()
+    sh.cmdloop(intro)
 
 # Local Variables: #
 # python-indent: 4 #

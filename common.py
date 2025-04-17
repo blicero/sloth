@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-12 17:08:19 krylon>
+# Time-stamp: <2025-04-17 19:11:33 krylon>
 #
 # /data/code/python/sloth/common.py
 # created on 14. 12. 2023
@@ -24,7 +24,7 @@ from threading import Lock
 from typing import Final
 
 APP_NAME: Final[str] = "Sloth"
-APP_VERSION: Final[str] = "0.1.0"
+APP_VERSION: Final[str] = "0.2.0"
 DEBUG: Final[bool] = True
 
 
