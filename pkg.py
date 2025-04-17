@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-17 21:20:42 krylon>
+# Time-stamp: <2025-04-17 21:24:08 krylon>
 #
 # /data/code/python/sloth/pkg.py
 # created on 18. 12. 2023
@@ -679,12 +679,10 @@ class OpenBSD(PackageManager):
         match op:
             case Operation.Install | Operation.Upgrade | Operation.UpgradeBig | Operation.UpgradeRelease:
                 return "/usr/sbin/pkg_add"
-            case Operation.Delete:
+            case Operation.Delete | Operation.Autoremove:
                 return "/usr/sbin/pkg_delete"
             case Operation.Refresh:
                 return ""
-            case Operation.Autoremove | Operation.Delete:
-                return "/usr/sbin/pkg_del"
             case Operation.Search:
                 return "/usr/sbin/pkg_info"
             case _:
