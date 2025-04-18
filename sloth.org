@@ -1,5 +1,5 @@
 # -*- mode: org; fill-column: 78; -*-
-# Time-stamp: <2025-04-17 21:21:18 krylon>
+# Time-stamp: <2025-04-18 15:04:15 krylon>
 #
 #+TAGS: internals(i) ui(u) bug(b) feature(f)
 #+TAGS: database(d) design(e), meditation(m)
@@ -8,7 +8,7 @@
 #+TODO: MEDITATE(m) PLANNING(p) | SUSPENDED(s)
 #+PRIORITIES: A G D
 
-* Sloth [10/13]
+* Sloth [11/13]
   :PROPERTIES:
   :COOKIE_DATA: todo recursive
   :VISIBILITY: children
@@ -22,17 +22,17 @@
   deploying a given configuration to several machines.
 ** Clocktable
    #+BEGIN: clocktable :scope file :maxlevel 202 :emphasize t
-   #+CAPTION: Clock summary at [2025-04-17 Do 21:21]
+   #+CAPTION: Clock summary at [2025-04-18 Fr 15:04]
    | Headline                               | Time       |         |       |      |
    |----------------------------------------+------------+---------+-------+------|
    | *Total time*                           | *1d 11:38* |         |       |      |
    |----------------------------------------+------------+---------+-------+------|
-   | *Sloth [10/13]*                        | *1d 11:38* |         |       |      |
+   | *Sloth [11/13]*                        | *1d 11:38* |         |       |      |
    | \_  /Features [3/4]/                   |            | /5:03/  |       |      |
    | \_    Fused refresh-upgrade            |            |         |  0:04 |      |
    | \_    Automatically say yes            |            |         |  0:28 |      |
    | \_    Audit                            |            |         |  4:31 |      |
-   | \_  /Platforms [5/7]/                  |            | /8:59/  |       |      |
+   | \_  /Platforms [6/7]/                  |            | /8:59/  |       |      |
    | \_    Arch                             |            |         |  0:31 |      |
    | \_    Fedora / RHEL                    |            |         |  2:26 |      |
    | \_    FreeBSD [0/0]                    |            |         |  1:50 |      |
@@ -80,7 +80,7 @@
     Some package managers (dnf, pkg on FreeBSD) can check the installed
     packages against a vulnerability database and point out any vulnerable
     packages.
-** Platforms [5/7]
+** Platforms [6/7]
    :PROPERTIES:
    :COOKIE_DATA: todo recursive
    :VISIBILITY: children
@@ -140,7 +140,8 @@
 **** pkg
 **** freebsd-update
 **** jails
-*** TODO OpenBSD
+*** DONE OpenBSD
+    CLOSED: [2025-04-18 Fr 15:04]
     :LOGBOOK:
     CLOCK: [2025-04-17 Do 21:05]--[2025-04-17 Do 21:21] =>  0:16
     CLOCK: [2025-04-17 Do 19:11]--[2025-04-17 Do 19:16] =>  0:05
