@@ -113,7 +113,7 @@ def get_logger(name: str, terminal: bool = True) -> logging.Logger:
         if terminal:
             log_console_handler = logging.StreamHandler()
             log_console_handler.setFormatter(log_fmt)
-            log_console_handler.setLevel(logging.DEBUG)
+            log_console_handler.setLevel(logging.INFO)
             log_obj.addHandler(log_console_handler)
 
         _cache[name] = log_obj
