@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-17 21:24:08 krylon>
+# Time-stamp: <2025-04-19 22:26:26 krylon>
 #
 # /data/code/python/sloth/pkg.py
 # created on 18. 12. 2023
@@ -60,6 +60,12 @@ class Package:
     kind: Optional[str] = None
     version: Optional[str] = None
     info: Optional[str] = None
+
+    def __hash__(self):
+        base = f"{self.name} -- {self.desc}"
+        if self.version is not None:
+            base += f" {self.version}"
+        return hash(base)
 
 
 class PackageManager(ABC):
