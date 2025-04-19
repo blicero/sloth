@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-19 22:26:26 krylon>
+# Time-stamp: <2025-04-19 23:16:45 krylon>
 #
 # /data/code/python/sloth/pkg.py
 # created on 18. 12. 2023
@@ -206,7 +206,9 @@ class PackageManager(ABC):
             self.output = (proc.stdout, proc.stderr)
 
         if proc.returncode != 0:
-            self.log.error("Error running package refresh:\n%s",
+            cmdstr: Final[str] = BLANK.join(cmd)
+            self.log.error("Error running command '%s':\n%s",
+                           cmdstr,
                            proc.stderr)
             return False
 
