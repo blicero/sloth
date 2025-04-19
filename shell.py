@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-19 22:15:57 krylon>
+# Time-stamp: <2025-04-19 23:35:48 krylon>
 #
 # /data/code/python/sloth/shell.py
 # created on 01. 04. 2025
@@ -21,16 +21,18 @@ import html
 import logging
 import readline
 import shlex
+import sys
 from cmd import Cmd
 from datetime import datetime, timedelta
+from typing import Final
 
 from prompt_toolkit import HTML
 from prompt_toolkit.shortcuts import checkboxlist_dialog, confirm
 
 from sloth import common, database, pkg
+from sloth.common import BLANK, DATE_FMT_NICE
 from sloth.config import Config
 from sloth.pkg import Operation, Package
-from sloth.common import BLANK
 
 
 class Shell(Cmd):
@@ -216,7 +218,14 @@ def pkg_fancy(p: Package) -> HTML:
 if __name__ == '__main__':
     intro: str = f"{common.APP_NAME} {common.APP_VERSION} (c) 2025 Benjamin Walkenhorst"
     sh = Shell()
-    sh.cmdloop(intro)
+    if len(sys.argv) > 1:
+        before: Final[datetime] = datetime.now()
+        command: Final[str] = BLANK.join(sys.argv[1:])
+        sh.onecmd(command)
+        timestr: Final[str] = before.strftime(DATE_FMT_NICE)
+        print(f"Operation began at {timestr}")
+    else:
+        sh.cmdloop(intro)
 
 # Local Variables: #
 # python-indent: 4 #
