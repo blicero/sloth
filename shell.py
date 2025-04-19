@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-17 19:16:05 krylon>
+# Time-stamp: <2025-04-19 22:15:57 krylon>
 #
 # /data/code/python/sloth/shell.py
 # created on 01. 04. 2025
@@ -107,6 +107,7 @@ class Shell(Cmd):
         self.log.debug("Search for %s", arg)
         packages = self.pk.search(*shlex.split(arg))
         if len(packages) > 0:
+            installed: set[Package] = {x for x in packages if x.info}
             dlg = checkboxlist_dialog(
                 title="Results",
                 text=f"{len(packages)} Search results for '{arg}'",
@@ -115,8 +116,23 @@ class Shell(Cmd):
             )
 
             results = dlg.run()
-            if results:
-                print([p.name for p in results])
+            if not results:
+                return False
+
+            with self.db:
+                to_install = [r for r in results if r not in installed]
+                if len(to_install) > 0:
+                    names = BLANK.join([x.name for x in to_install])
+                    self.pk.install(*to_install)
+                    self.db.op_add(Operation.Install, names, 0)
+
+                to_delete = [r for r in installed if r not in results]
+                if len(to_delete) > 0:
+                    names = BLANK.join([x.name for x in to_delete])
+                    self.pk.remove(*[x.name for x in to_delete])
+        else:
+            print("No results were found.")
+
         return False
 
     def do_upgrade(self, arg: str) -> bool:
