@@ -1,5 +1,5 @@
 # -*- mode: org; fill-column: 78; -*-
-# Time-stamp: <2025-04-18 15:04:15 krylon>
+# Time-stamp: <2025-04-19 22:25:07 krylon>
 #
 #+TAGS: internals(i) ui(u) bug(b) feature(f)
 #+TAGS: database(d) design(e), meditation(m)
@@ -8,7 +8,7 @@
 #+TODO: MEDITATE(m) PLANNING(p) | SUSPENDED(s)
 #+PRIORITIES: A G D
 
-* Sloth [11/13]
+* Sloth [12/14]
   :PROPERTIES:
   :COOKIE_DATA: todo recursive
   :VISIBILITY: children
@@ -22,12 +22,12 @@
   deploying a given configuration to several machines.
 ** Clocktable
    #+BEGIN: clocktable :scope file :maxlevel 202 :emphasize t
-   #+CAPTION: Clock summary at [2025-04-18 Fr 15:04]
+   #+CAPTION: Clock summary at [2025-04-19 Sa 22:25]
    | Headline                               | Time       |         |       |      |
    |----------------------------------------+------------+---------+-------+------|
-   | *Total time*                           | *1d 11:38* |         |       |      |
+   | *Total time*                           | *1d 12:00* |         |       |      |
    |----------------------------------------+------------+---------+-------+------|
-   | *Sloth [11/13]*                        | *1d 11:38* |         |       |      |
+   | *Sloth [12/14]*                        | *1d 12:00* |         |       |      |
    | \_  /Features [3/4]/                   |            | /5:03/  |       |      |
    | \_    Fused refresh-upgrade            |            |         |  0:04 |      |
    | \_    Automatically say yes            |            |         |  0:28 |      |
@@ -37,13 +37,14 @@
    | \_    Fedora / RHEL                    |            |         |  2:26 |      |
    | \_    FreeBSD [0/0]                    |            |         |  1:50 |      |
    | \_    OpenBSD                          |            |         |  4:12 |      |
-   | \_  /Components [2/2]/                 |            | /21:36/ |       |      |
+   | \_  /Components [2/2]/                 |            | /21:58/ |       |      |
    | \_    Bucket list [1/1]                |            |         |  0:44 |      |
    | \_      Use the damn database already! |            |         |       | 0:44 |
    | \_    Call package managers [1/1]      |            |         | 16:35 |      |
    | \_      Parsing output or interfacing? |            |         |       | 7:50 |
    | \_      To root or not to root         |            |         |       | 0:20 |
-   | \_    Shell [0/0]                      |            |         |  0:52 |      |
+   | \_    Shell [1/1]                      |            |         |  1:14 |      |
+   | \_      Make use of search results?    |            |         |       | 0:22 |
    | \_    Config [0/0]                     |            |         |  3:25 |      |
    #+END:
 ** Features [3/4]
@@ -243,7 +244,7 @@
      1. os.getuid() for the UID
      2. shutil.which() to check if a command is available
      3. subprocess.run() to execute a command.
-*** Shell [0/0]
+*** Shell [1/1]
     :PROPERTIES:
     :COOKIE_DATA: todo recursive
     :VISIBILITY: children
@@ -253,6 +254,14 @@
     CLOCK: [2025-04-10 Do 19:07]--[2025-04-10 Do 19:08] =>  0:01
     CLOCK: [2025-04-08 Di 17:06]--[2025-04-08 Di 17:32] =>  0:26
     :END:
+**** DONE Make use of search results?
+     CLOSED: [2025-04-19 Sa 22:24]
+     :LOGBOOK:
+     CLOCK: [2025-04-19 Sa 22:06]--[2025-04-19 Sa 22:24] =>  0:18
+     CLOCK: [2025-04-18 Fr 16:49]--[2025-04-18 Fr 16:53] =>  0:04
+     :END:
+     I currently display the packages in a list of checkboxes the user can
+     toggle, but I don't do anything with the result.
 *** Config [0/0]
     :PROPERTIES:
     :COOKIE_DATA: todo recursive
