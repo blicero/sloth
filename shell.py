@@ -30,6 +30,7 @@ from prompt_toolkit.shortcuts import checkboxlist_dialog, confirm
 from sloth import common, database, pkg
 from sloth.config import Config
 from sloth.pkg import Operation, Package
+from sloth.common import BLANK
 
 
 class Shell(Cmd):

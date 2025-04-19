@@ -27,13 +27,12 @@ from typing import Final, Optional
 
 from sloth import common, probe
 from sloth.config import Config
+from sloth.common import BLANK
 
 try:
     import dnf
 except ModuleNotFoundError:
     pass
-
-BLANK: Final[str] = " "
 
 
 # pylint: disable-msg=C0103

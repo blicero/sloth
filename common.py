@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-17 21:22:02 krylon>
+# Time-stamp: <2025-04-19 22:11:58 krylon>
 #
 # /data/code/python/sloth/common.py
 # created on 14. 12. 2023
@@ -26,6 +26,7 @@ from typing import Final
 APP_NAME: Final[str] = "Sloth"
 APP_VERSION: Final[str] = "0.2.1"
 DEBUG: Final[bool] = True
+BLANK: Final[str] = " "
 
 
 class Path:
