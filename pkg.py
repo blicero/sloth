@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-19 23:16:45 krylon>
+# Time-stamp: <2025-04-20 00:58:00 krylon>
 #
 # /data/code/python/sloth/pkg.py
 # created on 18. 12. 2023
@@ -137,11 +137,11 @@ class PackageManager(ABC):
         """Return the command to execute the package manager."""
 
     @abstractmethod
-    def refresh(self, **kwargs) -> None:
+    def refresh(self, **kwargs) -> int:
         """Update the local list of packages."""
 
     @abstractmethod
-    def install(self, *args, **kwargs) -> None:
+    def install(self, *args, **kwargs) -> int:
         """Install one or several packages.
 
         This may, obviously, cause additional packages to get installed
@@ -149,11 +149,11 @@ class PackageManager(ABC):
         """
 
     @abstractmethod
-    def remove(self, *args, **kwargs) -> None:
+    def remove(self, *args, **kwargs) -> int:
         """Remove one or more packages"""
 
     @abstractmethod
-    def upgrade(self, **kwargs) -> None:
+    def upgrade(self, **kwargs) -> int:
         """Install any pending updates."""
 
     @abstractmethod
@@ -161,11 +161,11 @@ class PackageManager(ABC):
         """Search for available packages."""
 
     @abstractmethod
-    def autoremove(self, *args, **kwargs) -> None:
+    def autoremove(self, *args, **kwargs) -> int:
         """Remove unneeded packages."""
 
     @abstractmethod
-    def cleanup(self, *args, **kwargs) -> None:
+    def cleanup(self, *args, **kwargs) -> int:
         """Clean up downloaded packages."""
 
     @abstractmethod
@@ -176,7 +176,7 @@ class PackageManager(ABC):
         """Return true if we are running with root privileges."""
         return os.geteuid() == 0
 
-    def _run(self, cmd: list[str], capture: bool = False, **kwargs) -> bool:
+    def _run(self, cmd: list[str], capture: bool = False, **kwargs) -> tuple[bool, int]:
         """Execute the given command."""
         prefix: list[str] = []
         if "op" in kwargs:
@@ -210,9 +210,9 @@ class PackageManager(ABC):
             self.log.error("Error running command '%s':\n%s",
                            cmdstr,
                            proc.stderr)
-            return False
+            return (False, proc.returncode)
 
-        return True
+        return (True, proc.returncode)
 
 
 aptPat: Final[re.Pattern] = re.compile(r"""
@@ -233,19 +233,21 @@ class APT(PackageManager):
             return [self.sudo, "apt"]
         return ["apt"]
 
-    def refresh(self, **kwargs) -> None:
+    def refresh(self, **kwargs) -> int:
         """Update the local list of packages."""
         cmd = ["update"]
-        self._run(cmd)
+        _, code = self._run(cmd)
+        return code
 
-    def upgrade(self, **kwargs) -> None:
+    def upgrade(self, **kwargs) -> int:
         """Install any pending updates."""
         cmd = ["full-upgrade"]
         if self.yes or "yes" in kwargs:
             cmd.append("-y")
-        self._run(cmd)
+        _, code = self._run(cmd)
+        return code
 
-    def install(self, *args, **kwargs) -> None:
+    def install(self, *args, **kwargs) -> int:
         """Install one or more packages."""
         assert len(args) > 0
         self.log.debug("Install %s",
@@ -254,9 +256,10 @@ class APT(PackageManager):
         if self.yes:
             cmd.append("-y")
         cmd.extend(args)
-        self._run(cmd)
+        _, code = self._run(cmd)
+        return code
 
-    def remove(self, *args, **kwargs) -> None:
+    def remove(self, *args, **kwargs) -> int:
         """Remove one or more packages."""
         assert len(args) > 0
         self.log.debug("Remove %s", BLANK.join(args))
@@ -264,9 +267,10 @@ class APT(PackageManager):
         if self.yes:
             cmd.append("-y")
         cmd.extend(args)
-        self._run(cmd)
+        _, code = self._run(cmd)
+        return code
 
-    def autoremove(self, *args, **kwargs) -> None:
+    def autoremove(self, *args, **kwargs) -> int:
         """Remove unneeded packages."""
         self.log.debug("Remove unneeded packages.")
         if "purge" in args:
@@ -275,12 +279,14 @@ class APT(PackageManager):
             cmd = ["autoremove"]
         if self.yes:
             cmd.append("-y")
-        self._run(cmd)
+        _, code = self._run(cmd)
+        return code
 
-    def cleanup(self, *args, **kwargs) -> None:
+    def cleanup(self, *args, **kwargs) -> int:
         """Clean up downloaded packages."""
         cmd = ["clean"]
-        self._run(cmd)
+        _, code = self._run(cmd)
+        return code
 
     def audit(self, *args, **kwargs) -> list[Package]:
         """Audit installed packages for known vulnerabilities."""
@@ -335,23 +341,25 @@ class Zypper(PackageManager):
         cmd.append("zypper")
         return cmd
 
-    def refresh(self, **kwargs) -> None:
+    def refresh(self, **kwargs) -> int:
         """Update the local list of packages."""
         cmd = ["ref"]
 
         if "force" in kwargs and kwargs["force"]:
             cmd.append("-f")
 
-        self._run(cmd)
+        _, code = self._run(cmd)
+        return code
 
-    def upgrade(self, **kwargs) -> None:
+    def upgrade(self, **kwargs) -> int:
         """Install any pending updates."""
         cmd: list[str] = ["dup"] if self.platform.name == "opensuse-tumbleweed" else ["up"]
         if self.yes:
             cmd.append("-y")
-        self._run(cmd)
+        _, code = self._run(cmd)
+        return code
 
-    def install(self, *args, **kwargs) -> None:
+    def install(self, *args, **kwargs) -> int:
         """Install one or more packages."""
         self.log.debug("Install %s",
                        ", ".join(args))
@@ -359,24 +367,28 @@ class Zypper(PackageManager):
         if self.yes:
             cmd.append("-y")
         cmd.extend(args)
-        self._run(cmd)
+        _, code = self._run(cmd)
+        return code
 
-    def remove(self, *args, **kwargs) -> None:
+    def remove(self, *args, **kwargs) -> int:
         """Remove one or more packages."""
         cmd = ["rm", "-u"]
         if self.yes:
             cmd.append("-y")
         cmd.extend(args)
-        self._run(cmd)
+        _, code = self._run(cmd)
+        return code
 
-    def autoremove(self, *args, **kwargs) -> None:
+    def autoremove(self, *args, **kwargs) -> int:
         """Remove unneeded packages."""
         self.log.info("autoremove is a no-op on zypper.")
+        return 0
 
-    def cleanup(self, *args, **kwargs) -> None:
+    def cleanup(self, *args, **kwargs) -> int:
         """Clean up downloaded packages."""
         cmd = ["clean", "--all"]
-        self._run(cmd)
+        _, code = self._run(cmd)
+        return code
 
     def audit(self, *args, **kwargs) -> list[Package]:
         """Audit installed packages for known vulnerabilities."""
@@ -430,36 +442,42 @@ class Pacman(PackageManager):
             return [self.sudo, "pacman"]
         return ["pacman"]
 
-    def refresh(self, **kwargs) -> None:
+    def refresh(self, **kwargs) -> int:
         """Update the local package database"""
         cmd = ["-Sy"]
-        self._run(cmd)
+        _, code = self._run(cmd)
+        return code
 
-    def upgrade(self, **kwargs) -> None:
+    def upgrade(self, **kwargs) -> int:
         """Install pending updates"""
         cmd = ["-Syu"]
-        self._run(cmd)
+        _, code = self._run(cmd)
+        return code
 
-    def install(self, *args, **kwargs) -> None:
+    def install(self, *args, **kwargs) -> int:
         """Install packages"""
         cmd = ["-S"] + list(args)
-        self._run(cmd)
+        _, code = self._run(cmd)
+        return code
 
-    def remove(self, *args, **kwargs) -> None:
+    def remove(self, *args, **kwargs) -> int:
         """Remove one or more packages."""
         cmd = ["-R"]
         cmd.extend(args)
-        self._run(cmd)
+        _, code = self._run(cmd)
+        return code
 
-    def autoremove(self, *args, **kwargs) -> None:
+    def autoremove(self, *args, **kwargs) -> int:
         """Remove unneeded packages."""
         cmd = ["-R", "-u"]
-        self._run(cmd)
+        _, code = self._run(cmd)
+        return code
 
-    def cleanup(self, *args, **kwargs) -> None:
+    def cleanup(self, *args, **kwargs) -> int:
         """Clean up downloaded packages."""
         cmd = ["-Scc"]
-        self._run(cmd)
+        _, code = self._run(cmd)
+        return code
 
     def audit(self, *args, **kwargs) -> list[Package]:
         """Audit installed packages for known vulnerabilities."""
@@ -507,47 +525,53 @@ class DNF(PackageManager):
             return [self.sudo, "dnf"]
         return ["dnf"]
 
-    def refresh(self, **kwargs) -> None:
+    def refresh(self, **kwargs) -> int:
         """Update the local package database"""
         # dnf does not have an explicit command to refresh its database, as far as I can tell.
         # But I suppose this is a useful approximation.
         cmd = ["--refresh", "check-update"]
-        self._run(cmd)
+        _, code = self._run(cmd)
+        return code
 
-    def upgrade(self, **kwargs) -> None:
+    def upgrade(self, **kwargs) -> int:
         """Install available updates."""
         cmd = ["upgrade"]
         if self.yes:
             cmd.append("-y")
-        self._run(cmd)
+        _, code = self._run(cmd)
+        return code
 
-    def install(self, *args, **kwargs) -> None:
+    def install(self, *args, **kwargs) -> int:
         """Install packages"""
         cmd = ["install"]
         if self.yes:
             cmd.append("-y")
         cmd.extend(args)
-        self._run(cmd)
+        _, code = self._run(cmd)
+        return code
 
-    def remove(self, *args, **kwargs) -> None:
+    def remove(self, *args, **kwargs) -> int:
         """Remove one or more packages."""
         cmd = ["remove"]
         if self.yes:
             cmd.append("-y")
         cmd.extend(args)
-        self._run(cmd)
+        _, code = self._run(cmd)
+        return code
 
-    def autoremove(self, *args, **kwargs) -> None:
+    def autoremove(self, *args, **kwargs) -> int:
         """Remove unneeded packages."""
         cmd = ["autoremove"]
         if self.yes:
             cmd.append("-y")
-        self._run(cmd)
+        _, code = self._run(cmd)
+        return code
 
-    def cleanup(self, *args, **kwargs) -> None:
+    def cleanup(self, *args, **kwargs) -> int:
         """Clean up downloaded packages."""
         cmd = ["clean all"]
-        self._run(cmd)
+        _, code = self._run(cmd)
+        return code
 
     def audit(self, *args, **kwargs) -> list[Package]:
         """Audit installed packages for known vulnerabilities."""
@@ -599,36 +623,42 @@ class FreeBSD(PackageManager):
             return [self.sudo, "/usr/sbin/pkg"]
         return ["/usr/sbin/pkg"]
 
-    def refresh(self, **kwargs) -> None:
+    def refresh(self, **kwargs) -> int:
         """Update the local package database."""
         cmd = ["update"]
-        self._run(cmd)
+        _, code = self._run(cmd)
+        return code
 
-    def upgrade(self, **kwargs) -> None:
+    def upgrade(self, **kwargs) -> int:
         """Install available updates."""
         cmd = ["upgrade"]
-        self._run(cmd)
+        _, code = self._run(cmd)
+        return code
 
-    def install(self, *args, **kwargs) -> None:
+    def install(self, *args, **kwargs) -> int:
         """Install one or more packages."""
         cmd = ["install"] + list(args)
-        self._run(cmd)
+        _, code = self._run(cmd)
+        return code
 
-    def remove(self, *args, **kwargs) -> None:
+    def remove(self, *args, **kwargs) -> int:
         """Remove one or more packages."""
         cmd = ["delete"]
         cmd.extend(args)
-        self._run(cmd)
+        _, code = self._run(cmd)
+        return code
 
-    def autoremove(self, *args, **kwargs) -> None:
+    def autoremove(self, *args, **kwargs) -> int:
         """Remove unneeded packages."""
         cmd = ["autoremove"]
-        self._run(cmd)
+        _, code = self._run(cmd)
+        return code
 
-    def cleanup(self, *args, **kwargs) -> None:
+    def cleanup(self, *args, **kwargs) -> int:
         """Clean up downloaded packages."""
         cmd = ["clean"]
-        self._run(cmd)
+        _, code = self._run(cmd)
+        return code
 
     def audit(self, *args, **kwargs) -> list[Package]:
         """Audit installed packages for known vulnerabilities."""
@@ -704,39 +734,45 @@ class OpenBSD(PackageManager):
             return [self.sudo, cmd]
         return [cmd]
 
-    def refresh(self, **kwargs) -> None:
+    def refresh(self, **kwargs) -> int:
         """Update the local package cache."""
         self.log.info("Refresh is a no-op on OpenBSD.")
+        return 0
 
-    def upgrade(self, **kwargs) -> None:
+    def upgrade(self, **kwargs) -> int:
         """Install available updates."""
         cmd = ["-u"]
-        self._run(cmd, op=Operation.Upgrade)
+        _, code = self._run(cmd, op=Operation.Upgrade)
+        return code
 
-    def install(self, *args, **kwargs) -> None:
+    def install(self, *args, **kwargs) -> int:
         """Install one or more packages."""
         assert len(args) > 0
         argstr: Final[str] = BLANK.join(args)
         self.log.debug("Install %s",
                        argstr)
-        self._run(list(args), op=Operation.Install)
+        _, code = self._run(list(args), op=Operation.Install)
+        return code
 
-    def remove(self, *args, **kwargs) -> None:
+    def remove(self, *args, **kwargs) -> int:
         """Remove one or more packages."""
         assert len(args) > 0
         argstr: Final[str] = BLANK.join(args)
         self.log.debug("Uninstall %s",
                        argstr)
-        self._run(list(args), op=Operation.Delete)
+        _, code = self._run(list(args), op=Operation.Delete)
+        return code
 
-    def autoremove(self, *args, **kwargs) -> None:
+    def autoremove(self, *args, **kwargs) -> int:
         """Remove unneeded packages."""
         self.log.debug("Remove unneeded packages.")
-        self._run(["-a"], op=Operation.Autoremove)
+        _, code = self._run(["-a"], op=Operation.Autoremove)
+        return code
 
-    def cleanup(self, *args, **kwargs) -> None:
+    def cleanup(self, *args, **kwargs) -> int:
         """Clean up downloaded package files."""
         self.log.debug("Cleanup is not implemented on OpenBSD.")
+        return 0
 
     def audit(self, *args, **kwargs) -> list[Package]:
         """Audit installed packages for known vulnerabilities."""

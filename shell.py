@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Time-stamp: <2025-04-19 23:35:48 krylon>
+# Time-stamp: <2025-04-20 01:01:54 krylon>
 #
 # /data/code/python/sloth/shell.py
 # created on 01. 04. 2025
@@ -100,8 +100,8 @@ class Shell(Cmd):
     def do_refresh(self, _arg: str) -> bool:
         """Refresh the package database."""
         with self.db:
-            self.pk.refresh()
-            self.db.op_add(Operation.Refresh, "", 0)
+            code: int = self.pk.refresh()
+            self.db.op_add(Operation.Refresh, "", code)
         return False
 
     def do_search(self, arg: str) -> bool:
@@ -125,13 +125,14 @@ class Shell(Cmd):
                 to_install = [r for r in results if r not in installed]
                 if len(to_install) > 0:
                     names = BLANK.join([x.name for x in to_install])
-                    self.pk.install(*to_install)
-                    self.db.op_add(Operation.Install, names, 0)
+                    code = self.pk.install(*to_install)
+                    self.db.op_add(Operation.Install, names, code)
 
                 to_delete = [r for r in installed if r not in results]
                 if len(to_delete) > 0:
                     names = BLANK.join([x.name for x in to_delete])
-                    self.pk.remove(*[x.name for x in to_delete])
+                    code = self.pk.remove(*[x.name for x in to_delete])
+                    self.db.op_add(Operation.Remove, names, code)
         else:
             print("No results were found.")
 
@@ -144,10 +145,10 @@ class Shell(Cmd):
         with self.db:
             if ("-r" in args) or \
                (self.refresh_due() and confirm("Refresh package cache?")):
-                self.pk.refresh()
-                self.db.op_add(Operation.Refresh, "", 0)
-            self.pk.upgrade()
-            self.db.op_add(Operation.Upgrade, arg, 0)
+                code = self.pk.refresh()
+                self.db.op_add(Operation.Refresh, "", code)
+            code = self.pk.upgrade()
+            self.db.op_add(Operation.Upgrade, arg, code)
         return False
 
     def do_install(self, arg: str) -> bool:
@@ -158,10 +159,10 @@ class Shell(Cmd):
             return False
         with self.db:
             if self.refresh_due() and confirm("Refresh package cache?"):
-                self.pk.refresh()
-                self.db.op_add(Operation.Refresh, "", 0)
-            self.pk.install(*packages)
-            self.db.op_add(Operation.Install, arg, 0)
+                code = self.pk.refresh()
+                self.db.op_add(Operation.Refresh, "", code)
+            code = self.pk.install(*packages)
+            self.db.op_add(Operation.Install, arg, code)
             return False
 
     def do_remove(self, arg: str) -> bool:
@@ -171,30 +172,31 @@ class Shell(Cmd):
         if len(packages) == 0:
             return False
         with self.db:
-            self.pk.remove(packages)
-            self.db.op_add(Operation.Delete, arg, 0)
+            code = self.pk.remove(packages)
+            self.db.op_add(Operation.Delete, arg, code)
         return False
 
     def do_autoremove(self, _arg: str) -> bool:
         """Remove unneeded packages."""
         self.log.info("Remove unneeded packages.")
         with self.db:
-            self.pk.autoremove()
-            self.db.op_add(Operation.Autoremove, "", 0)
+            code = self.pk.autoremove()
+            self.db.op_add(Operation.Autoremove, "", code)
         return False
 
     def do_clean(self, _arg: str) -> bool:
         """Clean the package cache."""
         self.log.info("Clean local package cache.")
         with self.db:
-            self.pk.cleanup()
-            self.db.op_add(Operation.Cleanup, "", 0)
+            code = self.pk.cleanup()
+            self.db.op_add(Operation.Cleanup, "", code)
         return False
 
     def do_audit(self, _arg: str) -> bool:
         """Audit installed packages for known vulnerabilities. Not supported on all platforms."""
         self.log.info("Perform audit")
         with self.db:
+            # I should do something with the results, yes?
             self.pk.audit()
             self.db.op_add(Operation.Audit, "", 0)
         return False
