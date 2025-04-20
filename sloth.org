@@ -1,5 +1,5 @@
 # -*- mode: org; fill-column: 78; -*-
-# Time-stamp: <2025-04-20 01:04:49 krylon>
+# Time-stamp: <2025-04-20 02:54:13 krylon>
 #
 #+TAGS: internals(i) ui(u) bug(b) feature(f)
 #+TAGS: database(d) design(e), meditation(m)
@@ -8,7 +8,7 @@
 #+TODO: MEDITATE(m) PLANNING(p) | SUSPENDED(s)
 #+PRIORITIES: A G D
 
-* Sloth [14/16]
+* Sloth [15/16]
   :PROPERTIES:
   :COOKIE_DATA: todo recursive
   :VISIBILITY: children
@@ -22,12 +22,12 @@
   deploying a given configuration to several machines.
 ** Clocktable
    #+BEGIN: clocktable :scope file :maxlevel 202 :emphasize t
-   #+CAPTION: Clock summary at [2025-04-20 So 01:04]
+   #+CAPTION: Clock summary at [2025-04-20 So 02:54]
    | Headline                               | Time       |         |       |      |
    |----------------------------------------+------------+---------+-------+------|
    | *Total time*                           | *1d 12:56* |         |       |      |
    |----------------------------------------+------------+---------+-------+------|
-   | *Sloth [14/16]*                        | *1d 12:56* |         |       |      |
+   | *Sloth [15/16]*                        | *1d 12:56* |         |       |      |
    | \_  /Features [4/4]/                   |            | /5:03/  |       |      |
    | \_    Fused refresh-upgrade            |            |         |  0:04 |      |
    | \_    Automatically say yes            |            |         |  0:28 |      |
@@ -37,10 +37,10 @@
    | \_    Fedora / RHEL                    |            |         |  2:26 |      |
    | \_    FreeBSD [0/0]                    |            |         |  1:50 |      |
    | \_    OpenBSD                          |            |         |  4:12 |      |
-   | \_  /Components [4/5]/                 |            | /22:54/ |       |      |
+   | \_  /Components [5/5]/                 |            | /22:54/ |       |      |
    | \_    Bucket list [1/1]                |            |         |  0:44 |      |
    | \_      Use the damn database already! |            |         |       | 0:44 |
-   | \_    Call package managers [1/2]      |            |         | 16:55 |      |
+   | \_    Call package managers [2/2]      |            |         | 16:55 |      |
    | \_      Return values                  |            |         |       | 0:20 |
    | \_      Parsing output or interfacing? |            |         |       | 7:50 |
    | \_      To root or not to root         |            |         |       | 0:20 |
@@ -165,7 +165,7 @@
 **** pkg_add/del/etc
 *** TODO [#E] pkgsrc
     Maybe. It's not a priority, though.
-** Components [4/5]
+** Components [5/5]
   :PROPERTIES:
   :COOKIE_DATA: todo recursive
   :VISIBILITY: children
@@ -200,7 +200,7 @@
     machine-readable form.
     What data do I want to store, and how do I model it? Should I defer this
     until I have some insight into what I actually *do*?
-*** Call package managers [1/2]
+*** Call package managers [2/2]
     :PROPERTIES:
     :COOKIE_DATA: todo recursive
     :VISIBILITY: children
@@ -219,7 +219,8 @@
     base class to define the interface and a subclass per package manager.
     Most likely they will just run the host system's package manager in an
     external process.
-**** TEST Return values
+**** DONE Return values
+     CLOSED: [2025-04-20 So 02:53]
      :LOGBOOK:
      CLOCK: [2025-04-20 So 00:44]--[2025-04-20 So 01:04] =>  0:20
      :END:
